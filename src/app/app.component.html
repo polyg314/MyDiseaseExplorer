@@ -10,27 +10,21 @@
     <h2>{{title}}</h2>
     <h5>Explore articles, genes, and genetic variants associated with a specific disease</h5>
     <br>
-    
     <div class="input-group md-form form-sm form-2 pl-0">
-      <!-- <form ng-submit="submitDisease()">
-        <input class="form-control my-0 py-1 red-border" type="text" placeholder="Search" aria-label="Search" ng-model="diseaseText">
-        <input type="submit" id="submit" value="Submit" />
-        <span class="input-group-text red lighten-3" id="basic-text1"><i class="fa fa-search text-grey"
-            aria-hidden="true"></i></span>
-      </form> -->
-
-
       <!-- <form ng-submit="diseaseSearch($event)"> -->
         <input class="form-control my-0 py-1 red-border" (keyup.enter)="methodInsideYourComponent($event)">
         <span class="input-group-text red lighten-3" id="basic-text1"><i class="fa fa-search text-grey"
             aria-hidden="true"></i></span>
       <!-- </form> -->
-
-
-
     </div>
   </div>
 
+  <div class="form-check" *ngFor="let result_name of result_names; index as i">
+    <input class="form-check-input" type="radio" name="nameRadios" value={{result_ids[i]}} (change)="handleRadioChange($event)">
+    <label class="form-check-label" for="exampleRadios1">
+      {{result_names[i]}}
+    </label>
+  </div>
 
   <!-- <br> -->
   <div class="panel panel-primary">
