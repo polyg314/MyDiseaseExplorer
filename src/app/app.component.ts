@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DataModel } from './data/data.model';
+// import {MatPaginator} from '@angular/material/paginator';
+// import {MatTableDataSource} from '@angular/material/table';
 
 
 @Component({
@@ -12,22 +14,60 @@ import { DataModel } from './data/data.model';
 
 
 export class AppComponent {
+  // @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+
   title = 'MyDisease.info Explorer';
   data: Observable<DataModel>;
   dbdata: any;
   result_names = [];
   result_ids = [];
   result_defs = [];
+  results_array = [];
+  current_disease: any;
   get_result_names(result_json){
     this.result_names = [];
     this.result_ids = [];
     this.result_defs = [];
+    this.results_array = [];
     for(var i = 0; i < result_json.hits.length; i++){
-      if(result_json.hits[i].mondo){
+      if(result_json.hits[i].mondo && result_json.hits[i].disgenet){
+        if(result_json.hits[i].disgenet.length > 0){
+          // console.log("SDIFHOSDIFJSOF")
+          // console.log(i)
+          // console.log(result_json.hits[i])
+          var new_disgenet = result_json.hits[i].disgenet[0]
+          if(result_json.hits[i].disgenet.length > 1){
+            for(var j = 1; j < result_json.hits[i].disgenet.length; j++){
+              if(result_json.hits[i].disgenet[j].genes_related_to_disease.constructor === Array){
+                new_disgenet.genes_related_to_disease = new_disgenet.genes_related_to_disease.concat(result_json.hits[i].disgenet[j].genes_related_to_disease)
+              }
+              else if(typeof(result_json.hits[i].disgenet[j].genes_related_to_disease) === "object"){
+                // console.log("muah")
+                new_disgenet.genes_related_to_disease.push(result_json.hits[i].disgenet[j].genes_related_to_disease)
+              }
+              if(result_json.hits[i].disgenet[j].variants_related_to_disease.constructor === Array){
+                new_disgenet.variants_related_to_disease = new_disgenet.variants_related_to_disease.concat(result_json.hits[i].disgenet[j].variants_related_to_disease)
+              }
+              else if(typeof(result_json.hits[i].disgenet[j].variants_related_to_disease === "object")){
+                new_disgenet.variants_related_to_disease.push(result_json.hits[i].disgenet[j].variants_related_to_disease)
+              }
+              
+            }
+          }
+          result_json.hits[i].disgenet = new_disgenet
+        }
+        if(result_json.hits[i].disgenet.genes_related_to_disease){
+          if(result_json.hits[i].disgenet.genes_related_to_disease.length > 0){
+            // console.log("do nothing")
+          }else{
+            result_json.hits[i].disgenet.genes_related_to_disease = [result_json.hits[i].disgenet.genes_related_to_disease]
+          }
+        }            
         console.log(result_json.hits[i])
         this.result_names.push(result_json.hits[i].mondo.label)
         this.result_ids.push(result_json.hits[i]._id)
         this.result_defs.push(result_json.hits[i].mondo.definition)
+        this.results_array.push(result_json.hits[i])
       }
     }
     console.log(this.result_names)
@@ -53,8 +93,42 @@ export class AppComponent {
     // console.log($event)
   }
 
+
+
+  current_variant_array = [];
+
+  getCurrentVariantArray(id){
+    var temp_var_array = this.current_disease.disgenet.variants_related_to_disease
+
+    var new_var_array = []
+    new_var_array.push(temp_var_array[0])
+    new_var_array[0].count = 1;
+    for(var i = 1; i < temp_var_array.length; i++){
+      var repeat = false;
+      for(var j = 0; j < new_var_array.length; j++){
+        if(temp_var_array[i].rsid === new_var_array[j].rsid){
+          repeat = true;
+          new_var_array[j].count = new_var_array[j].count + 1;
+        }
+      }
+      if(repeat === false){
+        temp_var_array[i].count = 1;
+        new_var_array.push(temp_var_array[i])
+      }
+    }
+    console.log("Nowwww")
+    console.log(new_var_array)
+    return(new_var_array)
+  }
+
+
   handleRadioChange($event){
-    console.log($event.target.value)
+    // console.log($event.target.value)
+    // console.log(this.results_array)
+    this.current_disease = this.results_array[parseInt($event.target.value)]
+    // console.log("HIHIHIH")
+    // console.log(this.current_disease)
+    this.current_variant_array = this.getCurrentVariantArray(parseInt($event.target.value))
   }
 
 

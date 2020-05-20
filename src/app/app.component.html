@@ -20,17 +20,42 @@
   </div>
 
   <div class="form-check" *ngFor="let result_name of result_names; index as i">
-    <input class="form-check-input" type="radio" name="nameRadios" value={{result_ids[i]}} (change)="handleRadioChange($event)">
+    <input class="form-check-input" type="radio" name="nameRadios" value={{i}} (change)="handleRadioChange($event)">
     <label class="form-check-label" for="exampleRadios1">
       {{result_names[i]}}
     </label>
   </div>
 
+
+
+
+  
+
+  <div *ngIf="current_disease">
+    <h5>Genes Related to Disease</h5>
+    <ul class="list-group" >
+      <li *ngFor="let gene of current_disease.disgenet.genes_related_to_disease;" class="list-group-item">{{gene.gene_name}}</li>
+    </ul>
+  </div>
+
+  <!-- <div *ngIf="current_disease">
+    <h5>Gene Variants Related to Disease</h5>
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let variant of current_disease.disgenet.variants_related_to_disease;">Chromosome: {{variant.chrom}} Position: {{variant.pos}} Description: <span [innerHTML]="variant.description"></span><b>{{variant.description}}</b></li>
+    </ul>
+  </div> -->
+  <div *ngIf="current_disease">
+    <h5>Gene Variants Related to Disease</h5>
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let variant of current_variant_array;">Chromosome: {{variant.chrom}} Position: {{variant.pos}} Hit Count: {{variant.count}}</li>
+    </ul>
+  </div>
+
+
   <!-- <br> -->
   <div class="panel panel-primary">
     <div class="panel-heading">Status</div>
     <div class="panel-body">
-  
       <app-bar-chart [data]="data | async"></app-bar-chart>
       <app-ideogram></app-ideogram>
     </div>
