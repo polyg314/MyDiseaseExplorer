@@ -107,9 +107,20 @@
     <div *ngIf="current_disease" class="panel panel-primary">
       <div class="panel-heading">Gene Variants Related to Disease <span class="counter"> Count: {{current_variant_array.length}}</span></div>
       <div class="panel-body">
+        <ul class="list-header">
+          <li class="list-group-item list-header-item">
+            <span class="list-spacing">Chromosome</span>
+            <span class="list-spacing">Position</span>
+            <span class="list-spacing">Hit Count</span>
+          </li>
+        </ul>
         <div id="variant_table_content">
           <ul class="list-group">
-            <li class="list-group-item" *ngFor="let variant of current_variant_array;">Chromosome: {{variant.chrom}} Position: {{variant.pos}} Hit Count: {{variant.count}}</li>
+            <li class="list-group-item" *ngFor="let variant of current_variant_array;">
+              <span class="list-spacing">{{variant.chrom}}</span>
+              <span class="list-spacing">{{variant.pos}}</span>
+              <span class="list-spacing">{{variant.count}}</span>
+            </li>
           </ul>
         </div>
       </div>
