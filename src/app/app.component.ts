@@ -183,6 +183,10 @@ export class AppComponent {
     this.createIdeogram(this.udpatedAnnotations);
   }
 
+  favoriteSeason: string;
+  seasons: string[] = ['Winter', 'Spring', 'Summer', 'Autumn'];
+  
+
   ngOnInit() {
     // this.createIdeogram(this.example_ans);
     // console.log("hiiasdfoasdjfoiasjfoiasjfosdjfio")

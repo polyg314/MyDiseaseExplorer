@@ -19,13 +19,54 @@
     </div>
   </div>
 
-  <div class="form-check" *ngFor="let result_name of result_names; index as i">
+  <!-- <label id="example-radio-group-label">Pick your favorite season</label>
+<mat-radio-group
+  aria-labelledby="example-radio-group-label"
+  class="example-radio-group"
+  [(ngModel)]="favoriteSeason">
+  <mat-radio-button class="example-radio-button" *ngFor="let season of seasons" [value]="season">
+    {{season}}
+  </mat-radio-button>
+</mat-radio-group>
+<div>Your favorite season is: {{favoriteSeason}}</div> -->
+
+<!-- <mat-radio-group class="smallRadio">
+  <mat-radio-button value="1">Option 1</mat-radio-button>
+  <mat-radio-button value="2">Option 2</mat-radio-button>
+</mat-radio-group> -->
+<div class="col-12 search-results-div">
+  <div class="panel panel-primary">
+    <div class="panel-heading">Search Results for:</div>
+    <div class="panel-body">
+      <div class="btn-group btn-group-toggle" data-toggle="buttons">
+        <label class="form-check-label btn btn-secondary" for="exampleRadios1" *ngFor="let result_name of result_names; index as i" value={{i}} (click)="handleRadioChange($event)">
+          <input class="form-check-input" type="radio" name="nameRadios" value={{i}} (click)="handleRadioChange($event)">
+          {{result_names[i]}}
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  <!-- <div class="form-check" *ngFor="let result_name of result_names; index as i">
     <input class="form-check-input" type="radio" name="nameRadios" value={{i}} (change)="handleRadioChange($event)">
     <label class="form-check-label" for="exampleRadios1">
       {{result_names[i]}}
     </label>
-  </div>
+  </div> -->
 
+  <!-- <div class="input-group">
+    <div class="input-group-prepend">
+      <div class="input-group-text form-check" *ngFor="let result_name of result_names; index as i">
+        <input class="form-check-input" type="radio" name="nameRadios" value={{i}} (change)="handleRadioChange($event)">
+        <label class="form-check-label" for="exampleRadios1">
+          {{result_names[i]}}
+        </label>
+      </div>
+    </div>
+  </div> -->
 
 
 
@@ -37,9 +78,9 @@
       <li *ngFor="let gene of current_disease.disgenet.genes_related_to_disease;" class="list-group-item">{{gene.gene_name}}</li>
     </ul>
   </div> -->
-
+<div class="col-md-4">
   <div *ngIf="current_disease" class="panel panel-primary">
-    <div class="panel-heading">Genes Related to Disease</div>
+    <div class="panel-heading">Genes Related to Disease <span class="counter"> Count: {{current_disease.disgenet.genes_related_to_disease.length}}</span></div>
     <div class="panel-body">
       <div id="gene_table_content">
         <ul class="list-group" >
@@ -48,6 +89,7 @@
       </div>
     </div>
   </div>
+</div>
 
   <!-- <div *ngIf="current_disease">
     <h5>Gene Variants Related to Disease</h5>
@@ -61,28 +103,32 @@
       <li class="list-group-item" *ngFor="let variant of current_variant_array;">Chromosome: {{variant.chrom}} Position: {{variant.pos}} Hit Count: {{variant.count}}</li>
     </ul>
   </div> -->
-
-  <div *ngIf="current_disease" class="panel panel-primary">
-    <div class="panel-heading">Gene Variants Related to Disease</div>
-    <div class="panel-body">
-      <div id="variant_table_content">
-        <ul class="list-group">
-          <li class="list-group-item" *ngFor="let variant of current_variant_array;">Chromosome: {{variant.chrom}} Position: {{variant.pos}} Hit Count: {{variant.count}}</li>
-        </ul>
+  <div class="col-md-8">
+    <div *ngIf="current_disease" class="panel panel-primary">
+      <div class="panel-heading">Gene Variants Related to Disease <span class="counter"> Count: {{current_variant_array.length}}</span></div>
+      <div class="panel-body">
+        <div id="variant_table_content">
+          <ul class="list-group">
+            <li class="list-group-item" *ngFor="let variant of current_variant_array;">Chromosome: {{variant.chrom}} Position: {{variant.pos}} Hit Count: {{variant.count}}</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
-  <div id="ideo-container"></div>
 
-  <!-- <br> -->
-  <div class="panel panel-primary">
+  
+  
+  <div id="ideo-container" class="col-md-12"></div>
+
+  <br>
+  <!-- <div class="panel panel-primary">
     <div class="panel-heading">Status</div>
     <div class="panel-body">
-      <app-bar-chart [data]="data | async"></app-bar-chart>
+      <app-bar-chart [data]="data | async"></app-bar-chart> -->
       <!-- <app-ideogram></app-ideogram> -->
-    </div>
-  </div>
+    <!-- </div>
+  </div> -->
   
 </div>
-
-<ngbd-table-pagination *ngIf="current_disease"></ngbd-table-pagination>
+<!-- 
+<ngbd-table-pagination *ngIf="current_disease"></ngbd-table-pagination> -->
