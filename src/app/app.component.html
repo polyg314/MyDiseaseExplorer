@@ -34,9 +34,9 @@
   <mat-radio-button value="1">Option 1</mat-radio-button>
   <mat-radio-button value="2">Option 2</mat-radio-button>
 </mat-radio-group> -->
-<div class="col-12 search-results-div">
+<div class="col-12 search-results-div" *ngIf="searchResults">
   <div class="panel panel-primary">
-    <div class="panel-heading">Search Results for:</div>
+    <div class="panel-heading">Search Results for: {{searchTerm}}</div>
     <div class="panel-body">
       <div class="btn-group btn-group-toggle" data-toggle="buttons">
         <label class="form-check-label btn btn-secondary" for="exampleRadios1" *ngFor="let result_name of result_names; index as i" value={{i}} (click)="handleRadioChange($event)">
@@ -80,7 +80,7 @@
   </div> -->
 <div class="col-md-4">
   <div *ngIf="current_disease" class="panel panel-primary">
-    <div class="panel-heading">Genes Related to Disease <span class="counter"> Count: {{current_disease.disgenet.genes_related_to_disease.length}}</span></div>
+    <div class="panel-heading">Genes Related to Disease <span *ngIf="current_disease.disgenet.genes_related_to_disease" class="counter"> Gene Count: {{current_disease.disgenet.genes_related_to_disease.length}}</span></div>
     <div class="panel-body">
       <div id="gene_table_content">
         <ul class="list-group" >
@@ -105,7 +105,7 @@
   </div> -->
   <div class="col-md-8">
     <div *ngIf="current_disease" class="panel panel-primary">
-      <div class="panel-heading">Gene Variants Related to Disease <span class="counter"> Count: {{current_variant_array.length}}</span></div>
+      <div class="panel-heading">Gene Variants Related to Disease <span class="counter"> Variant Count: {{current_variant_array.length}}</span></div>
       <div class="panel-body">
         <ul class="list-header">
           <li class="list-group-item list-header-item">

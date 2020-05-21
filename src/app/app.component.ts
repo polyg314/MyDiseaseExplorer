@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit} from '@angular/core';
 import { Observable } from 'rxjs';
 import { DataModel } from './data/data.model';
 import Ideogram from 'ideogram';
 import { IdeogramComponent} from './ideogram/ideogram.component'
+
 // import {IdeogramComponent} from './ideogram/ideogram.component'
 // import {MatPaginator} from '@angular/material/paginator';
 // import {MatTableDataSource} from '@angular/material/table';
@@ -16,9 +17,13 @@ import { IdeogramComponent} from './ideogram/ideogram.component'
 })
 
 
-export class AppComponent {
+export class AppComponent{
   // @ViewChild(IdeogramComponent, {static: false}) child;
-
+  // ngAfterContentChecked() {
+  //   if(this.current_variant_array.length > 0){
+  //     this.createIdeogram(this.updatedAnnotations);
+  //   }
+  // }
   // ngAfterViewInit() {
   //   console.log('only after THIS EVENT "child" is usable!!');
   //   console.log(this.child)
@@ -26,11 +31,11 @@ export class AppComponent {
 
   constructor(private http: HttpClient) {
     this.data = this.http.get<DataModel>('./assets/data.json');
-    this.http.get('./assets/diabetes.json').subscribe(resp => {
-      this.dbdata = resp;
-      console.log(this.dbdata)
-      this.get_result_names(this.dbdata)
-    });;
+    // this.http.get('./assets/diabetes.json').subscribe(resp => {
+    //   this.dbdata = resp;
+    //   console.log(this.dbdata)
+    //   this.get_result_names(this.dbdata)
+    // });;
   }
 
   example_ans = [{
@@ -124,15 +129,30 @@ export class AppComponent {
     console.log(this.result_defs)
   }
 
+  searchTerm = '';
+  searchResults = false;
  
   diseaseName:string;
   diseaseSearch($event: any){
   console.log("hellllooo")
   }
   methodInsideYourComponent($event){
+    
     console.log("hellllooo2")
     console.log($event.target.value)
-    
+    this.searchTerm = $event.target.value;
+    var api_string = 'http://mydisease.info/v1/query?q=' + this.searchTerm
+    if(this.searchTerm.length > 0){
+      this.http.get(api_string).subscribe(resp => {
+        this.dbdata = resp;
+        console.log(this.dbdata)
+        this.get_result_names(this.dbdata)
+        this.searchResults = true;
+      });;
+    }else{
+      this.current_disease = '';
+      console.log("OKasdfasfadf")
+    }
     // this.ideogram.createIdeogram();
 
     // this.createIdeogram();
@@ -169,7 +189,7 @@ export class AppComponent {
     return(new_var_array)
   }
 
-  udpatedAnnotations = []
+  updatedAnnotations = []
   handleRadioChange($event){
     // console.log($event.target.value)
     // console.log(this.results_array)
@@ -177,15 +197,20 @@ export class AppComponent {
     // console.log("HIHIHIH")
     // console.log(this.current_disease)
     this.current_variant_array = this.getCurrentVariantArray(parseInt($event.target.value))
-    this.udpatedAnnotations = this.newAnnotationArray(this.current_variant_array)
+    this.updatedAnnotations = this.newAnnotationArray(this.current_variant_array)
     console.log("NEW ANS")
-    console.log(this.udpatedAnnotations)
-    this.createIdeogram(this.udpatedAnnotations);
+    console.log(this.updatedAnnotations)
+    // ngAfterContentChecked() {
+ 
+    // }
+  
+    this.createIdeogram(this.updatedAnnotations);
   }
 
+ 
   favoriteSeason: string;
   seasons: string[] = ['Winter', 'Spring', 'Summer', 'Autumn'];
-  
+
 
   ngOnInit() {
     // this.createIdeogram(this.example_ans);
