@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DataModel } from './data/data.model';
+// import Ideogram from 'ideogram';
+// import {IdeogramComponent} from './ideogram/ideogram.component'
 // import {MatPaginator} from '@angular/material/paginator';
 // import {MatTableDataSource} from '@angular/material/table';
 
@@ -15,6 +17,13 @@ import { DataModel } from './data/data.model';
 
 export class AppComponent {
   // @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  // createIdeogram() {
+  //   const ideogram = new Ideogram({
+  //     organism: 'human',
+  //     dataDir: 'https://unpkg.com/ideogram@0.10.0/dist/data/bands/native/',
+  //     container: '#ideo-container'
+  //   });
+  // }
 
   title = 'MyDisease.info Explorer';
   data: Observable<DataModel>;
@@ -90,6 +99,7 @@ export class AppComponent {
   methodInsideYourComponent($event){
     console.log("hellllooo2")
     console.log($event.target.value)
+    // this.createIdeogram();
     // console.log($event)
   }
 

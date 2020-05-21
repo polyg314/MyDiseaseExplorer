@@ -12,14 +12,21 @@ export class IdeogramComponent implements OnInit {
 
   ngOnInit() {
     this.createIdeogram();
+
   }
 
   createIdeogram() {
     const ideogram = new Ideogram({
-      organism: 'human',
-      dataDir: 'https://unpkg.com/ideogram@0.10.0/dist/data/bands/native/',
-      container: '#ideo-container'
+      organism: 'human',  
+      container: '#ideo-container',
+      annotations: [{
+        name: 'BRCA1',
+        chr: '17',
+        start: 43044294,
+        stop: 43125482
+      }]
     });
+    console.log(ideogram)
   }
 
 }
