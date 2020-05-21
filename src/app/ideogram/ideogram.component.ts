@@ -11,7 +11,6 @@ export class IdeogramComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.createIdeogram();
 
   }
 

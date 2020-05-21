@@ -24,3 +24,18 @@
     margin-top: 10px; 
     color: #ef9a9a;
 }
+
+#ideo-container {
+  height: 400px;
+}
+
+
+#gene_table_content{
+  max-height: 300px;
+  overflow: scroll;
+}
+
+#variant_table_content{
+  max-height: 300px;
+  overflow: scroll;
+}

@@ -30,12 +30,23 @@
 
 
   
-
+<!-- 
   <div *ngIf="current_disease">
     <h5>Genes Related to Disease</h5>
     <ul class="list-group" >
       <li *ngFor="let gene of current_disease.disgenet.genes_related_to_disease;" class="list-group-item">{{gene.gene_name}}</li>
     </ul>
+  </div> -->
+
+  <div *ngIf="current_disease" class="panel panel-primary">
+    <div class="panel-heading">Genes Related to Disease</div>
+    <div class="panel-body">
+      <div id="gene_table_content">
+        <ul class="list-group" >
+          <li *ngFor="let gene of current_disease.disgenet.genes_related_to_disease;" class="list-group-item">{{gene.gene_name}}</li>
+        </ul>
+      </div>
+    </div>
   </div>
 
   <!-- <div *ngIf="current_disease">
@@ -44,23 +55,34 @@
       <li class="list-group-item" *ngFor="let variant of current_disease.disgenet.variants_related_to_disease;">Chromosome: {{variant.chrom}} Position: {{variant.pos}} Description: <span [innerHTML]="variant.description"></span><b>{{variant.description}}</b></li>
     </ul>
   </div> -->
-  <div *ngIf="current_disease">
+  <!-- <div *ngIf="current_disease">
     <h5>Gene Variants Related to Disease</h5>
     <ul class="list-group">
       <li class="list-group-item" *ngFor="let variant of current_variant_array;">Chromosome: {{variant.chrom}} Position: {{variant.pos}} Hit Count: {{variant.count}}</li>
     </ul>
-  </div>
+  </div> -->
 
+  <div *ngIf="current_disease" class="panel panel-primary">
+    <div class="panel-heading">Gene Variants Related to Disease</div>
+    <div class="panel-body">
+      <div id="variant_table_content">
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let variant of current_variant_array;">Chromosome: {{variant.chrom}} Position: {{variant.pos}} Hit Count: {{variant.count}}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div id="ideo-container"></div>
 
   <!-- <br> -->
   <div class="panel panel-primary">
     <div class="panel-heading">Status</div>
     <div class="panel-body">
       <app-bar-chart [data]="data | async"></app-bar-chart>
-      <app-ideogram></app-ideogram>
+      <!-- <app-ideogram></app-ideogram> -->
     </div>
   </div>
   
 </div>
 
-
+<ngbd-table-pagination *ngIf="current_disease"></ngbd-table-pagination>

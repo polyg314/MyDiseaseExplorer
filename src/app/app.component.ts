@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DataModel } from './data/data.model';
-// import Ideogram from 'ideogram';
+import Ideogram from 'ideogram';
+import { IdeogramComponent} from './ideogram/ideogram.component'
 // import {IdeogramComponent} from './ideogram/ideogram.component'
 // import {MatPaginator} from '@angular/material/paginator';
 // import {MatTableDataSource} from '@angular/material/table';
@@ -16,14 +17,53 @@ import { DataModel } from './data/data.model';
 
 
 export class AppComponent {
-  // @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-  // createIdeogram() {
-  //   const ideogram = new Ideogram({
-  //     organism: 'human',
-  //     dataDir: 'https://unpkg.com/ideogram@0.10.0/dist/data/bands/native/',
-  //     container: '#ideo-container'
-  //   });
+  // @ViewChild(IdeogramComponent, {static: false}) child;
+
+  // ngAfterViewInit() {
+  //   console.log('only after THIS EVENT "child" is usable!!');
+  //   console.log(this.child)
   // }
+
+  constructor(private http: HttpClient) {
+    this.data = this.http.get<DataModel>('./assets/data.json');
+    this.http.get('./assets/diabetes.json').subscribe(resp => {
+      this.dbdata = resp;
+      console.log(this.dbdata)
+      this.get_result_names(this.dbdata)
+    });;
+  }
+
+  example_ans = [{
+    name: 'BRCA1',
+    chr: '17',
+    start: 43044294,
+    stop: 43125482
+  }]
+
+  newAnnotationArray(current_variants){
+    var newAA = []
+    for(var i = 0; i < current_variants.length; i++){
+      if(parseInt(current_variants[i].chrom) > 0){
+        var newA = {
+          name: current_variants[i].rsid,
+          chr: current_variants[i].chrom,
+          start:parseInt(current_variants[i].pos),
+          stop:parseInt(current_variants[i].pos)
+        };
+        newAA.push(newA)
+      }
+    }
+    return(newAA)
+  }
+
+  createIdeogram(annotations_array) {
+    const ideogram = new Ideogram({
+      organism: 'human',  
+      container: '#ideo-container',
+      annotations: annotations_array
+    });
+    console.log(ideogram)
+  }
 
   title = 'MyDisease.info Explorer';
   data: Observable<DataModel>;
@@ -84,14 +124,7 @@ export class AppComponent {
     console.log(this.result_defs)
   }
 
-  constructor(private http: HttpClient) {
-    this.data = this.http.get<DataModel>('./assets/data.json');
-    this.http.get('./assets/diabetes.json').subscribe(resp => {
-      this.dbdata = resp;
-      console.log(this.dbdata)
-      this.get_result_names(this.dbdata)
-    });;
-  }
+ 
   diseaseName:string;
   diseaseSearch($event: any){
   console.log("hellllooo")
@@ -99,6 +132,9 @@ export class AppComponent {
   methodInsideYourComponent($event){
     console.log("hellllooo2")
     console.log($event.target.value)
+    
+    // this.ideogram.createIdeogram();
+
     // this.createIdeogram();
     // console.log($event)
   }
@@ -133,7 +169,7 @@ export class AppComponent {
     return(new_var_array)
   }
 
-
+  udpatedAnnotations = []
   handleRadioChange($event){
     // console.log($event.target.value)
     // console.log(this.results_array)
@@ -141,7 +177,15 @@ export class AppComponent {
     // console.log("HIHIHIH")
     // console.log(this.current_disease)
     this.current_variant_array = this.getCurrentVariantArray(parseInt($event.target.value))
+    this.udpatedAnnotations = this.newAnnotationArray(this.current_variant_array)
+    console.log("NEW ANS")
+    console.log(this.udpatedAnnotations)
+    this.createIdeogram(this.udpatedAnnotations);
   }
 
+  ngOnInit() {
+    // this.createIdeogram(this.example_ans);
+    // console.log("hiiasdfoasdjfoiasjfoiasjfosdjfio")
+  }
 
 }
