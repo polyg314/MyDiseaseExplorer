@@ -127,7 +127,9 @@ export class AppComponent {
       }
     }
     console.log("Nowwww")
+    
     console.log(new_var_array)
+    new_var_array = new_var_array.sort((a, b) => (a.count < b.count) ? 1 : -1)
     return(new_var_array)
   }
 
