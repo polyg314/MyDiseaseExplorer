@@ -31,10 +31,10 @@
     </div>
   </div>
 
-  <div class="col-md-4">
+  <div class="col-md-12 col-lg-2">
     <div *ngIf="current_disease" class="panel panel-primary">
-      <div class="panel-heading">Genes Related to Disease <span *ngIf="current_disease.disgenet.genes_related_to_disease" class="counter"> Gene Count: {{current_disease.disgenet.genes_related_to_disease.length}}</span></div>
-      <div class="panel-body">
+      <div class="panel-heading"><span *ngIf="current_disease.disgenet.genes_related_to_disease">{{current_disease.disgenet.genes_related_to_disease.length}}</span> Related Gene<span *ngIf="current_disease.disgenet.genes_related_to_disease.length > 1">s</span></div>
+      <div class="panel-body gene-list-panel-body">
         <div id="gene_table_content">
           <ul class="list-group" >
             <li (click)="geneSearch(gene.gene_name)" *ngFor="let gene of current_disease.disgenet.genes_related_to_disease;" class="list-group-item">{{gene.gene_name}}</li>
@@ -43,10 +43,10 @@
       </div>
     </div>
   </div>
-  <div class="col-md-8">
+  <div class="col-md-12 col-lg-10">
     <div *ngIf="current_disease" class="panel panel-primary">
-      <div class="panel-heading">Gene Mapping:</div>
-      <div class="panel-body">
+      <div class="panel-heading">Gene Mapping: <span *ngIf="currentSearchGene">{{currentSearchGene.name}} , {{currentSearchGene.description}}</span></div>
+      <div class="panel-body gene-ideo-panel-body">
         <div id="gene-ideo-container"></div>
       </div>
     </div>

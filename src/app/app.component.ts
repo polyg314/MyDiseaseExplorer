@@ -219,19 +219,39 @@ export class AppComponent{
 
 
   geneAA = [];
-
+  geneJson: any;
+  currentSearchGene: any;
   geneSearch(gene_name){
     // console.log("HISDFHSDOIF")
     // console.log(gene_name)
     // this.createGeneIdeogram([])
-
+    this.geneAA = []
 
    
     var api_string = 'https://mygene.info/v3/query?q=' + gene_name + '&fields=symbol%2Cgenomic_pos%2Cname&species=human&size=1'
 
     this.http.get(api_string).subscribe(resp => {
-        console.log(resp.hits[0])
-        var geneJson = resp.hits[0]
+        // console.log(resp.hits[0])
+        this.geneJson = resp
+        console.log(this.geneJson.hits[0])
+        if(this.geneJson.hits[0].genomic_pos){
+          var myGeneA = {
+            name: this.geneJson.hits[0].symbol,
+            chr: this.geneJson.hits[0].genomic_pos.chr,
+            start: this.geneJson.hits[0].genomic_pos.start,
+            stop: this.geneJson.hits[0].genomic_pos.end,
+            id: this.geneJson.hits[0].genomic_pos.ensemblgene,
+            color: 'red'
+          }
+          this.currentSearchGene = myGeneA
+          this.currentSearchGene.description = this.geneJson.hits[0].name,
+          console.log(myGeneA)
+          this.geneAA.push(myGeneA)
+          this.createGeneIdeogram(this.geneAA)
+        }
+        else{
+          this.geneJson = []
+        }
    
         // var myGeneA = {
         //     name: gene.symbol,
@@ -289,12 +309,14 @@ export class AppComponent{
     const ideogram = new Ideogram({
       organism: 'human',  
       container: '#gene-ideo-container',
-      chrWidth: 8,
-      chrHeight: 140,
+      chrWidth: 6,
+      chrHeight: 120,
+      annotationHeight: 5,
       chrLabelSize: 10,
-      rows: 2,
-      rotatable: false,
-      annotations: annotations_array
+      rows: 1,
+      rotatable: true,
+      annotations: annotations_array,
+      onWillShowAnnotTooltip: this.decorateGene
     });
     // console.log(ideogram)
   }
@@ -323,27 +345,28 @@ export class AppComponent{
   //   onWillShowAnnotTooltip: decorateGene
   // }
 
-  shape = 'triangle'; 
+  // shape = 'triangle'; 
 
-  legend = [{
-    name: '<b>Click gene to search</b>',
-    rows: [
-      {name: 'Interacting gene', color: 'purple', shape: this.shape},
-      {name: 'Paralogous gene', color: 'pink', shape: this.shape},
-      {name: 'Searched gene', color: 'red', shape: this.shape}
-    ]
-  }];
+  // legend = [{
+  //   name: '<b>Click gene to search</b>',
+  //   rows: [
+  //     {name: 'Interacting gene', color: 'purple', shape: this.shape},
+  //     {name: 'Paralogous gene', color: 'pink', shape: this.shape},
+  //     {name: 'Searched gene', color: 'red', shape: this.shape}
+  //   ]
+  // }];
 
 
   decorateGene(annot) {
-    const org = Ideogram.getScientificName(Ideogram.config.taxid);
-    const term = `(${annot.name}[gene])+AND+(${org}[orgn])`;
-    const url = `https://ncbi.nlm.nih.gov/gene/?term=${term}`;
-    const description = Ideogram.annotDescriptions[annot.name].split(' [')[0];
+    // console.log(annot)
+    console.log("muah")
+    // console.log(Ideogram.taxid)
+    // const org = annot.id
+    // const term = "(" + annot.name + '}[gene])+AND+(${' + org + '}[orgn])`;
+    const url = "https://ncbi.nlm.nih.gov/gene/?term=(" + annot.name + "[gene])+AND+(Homo%20sapiens[orgn])";
+    // const description = annot.description
     annot.displayName =
       `<a target="_blank" href="${url}">${annot.name}</a>
-      <br/>
-      ${description}
       <br/>`;
     return annot
   }

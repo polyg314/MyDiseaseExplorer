@@ -109,3 +109,21 @@
 #variant_table_content .list-group{
   margin-bottom: 0px;
 }
+.gene-list-panel-body{
+  padding: 0px;
+}
+
+#gene-ideo-container{
+  min-height: 300px;
+
+}
+
+.gene-ideo-panel-body{
+  padding: 0px;
+  overflow-x: scroll;
+}
+/* #_ideogramLegend{
+  position: absolute !important;
+    top: 185px !important;
+    right: 20px !important;
+} */
