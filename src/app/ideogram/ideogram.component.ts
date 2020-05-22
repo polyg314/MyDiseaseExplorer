@@ -14,18 +14,33 @@ export class IdeogramComponent implements OnInit {
 
   }
 
-  createIdeogram() {
-    const ideogram = new Ideogram({
-      organism: 'human',  
-      container: '#ideo-container',
-      annotations: [{
-        name: 'BRCA1',
-        chr: '17',
-        start: 43044294,
-        stop: 43125482
-      }]
-    });
-    console.log(ideogram)
-  }
+  // createIdeogram() {
+  //   const ideogram = new Ideogram({
+  //     organism: 'human',  
+  //     container: '#ideo-container',
+  //     annotations: [{
+  //       name: 'BRCA1',
+  //       chr: '17',
+  //       start: 43044294,
+  //       stop: 43125482
+  //     }]
+  //   });
+  //   console.log(ideogram)
+  // }
+  
+  // createGeneIdeogram() {
+  //   const ideogram = new Ideogram({
+  //     organism: 'human',  
+  //     container: '#ideo-container',
+  //     annotations: [{
+  //       name: 'BRCA1',
+  //       chr: '17',
+  //       start: 43044294,
+  //       stop: 43125482
+  //     }]
+  //   });
+  //   console.log(ideogram)
+  // }
+
 
 }

@@ -71,10 +71,14 @@ export class AppComponent{
       chrHeight: 140,
       chrLabelSize: 10,
       rows: 2,
+      rotatable: false,
       annotations: annotations_array
     });
-    console.log(ideogram)
+    // console.log(ideogram)
   }
+
+
+
 
   title = 'MyDisease.info Explorer';
   data: Observable<DataModel>;
@@ -123,16 +127,16 @@ export class AppComponent{
             result_json.hits[i].disgenet.genes_related_to_disease = [result_json.hits[i].disgenet.genes_related_to_disease]
           }
         }            
-        console.log(result_json.hits[i])
+        // console.log(result_json.hits[i])
         this.result_names.push(result_json.hits[i].mondo.label)
         this.result_ids.push(result_json.hits[i]._id)
         this.result_defs.push(result_json.hits[i].mondo.definition)
         this.results_array.push(result_json.hits[i])
       }
     }
-    console.log(this.result_names)
-    console.log(this.result_ids)
-    console.log(this.result_defs)
+    // console.log(this.result_names)
+    // console.log(this.result_ids)
+    // console.log(this.result_defs)
   }
 
   searchTerm = '';
@@ -142,10 +146,10 @@ export class AppComponent{
   diseaseSearch($event: any){
   console.log("hellllooo")
   }
-  methodInsideYourComponent($event){
+  searchForDisease($event){
     
-    console.log("hellllooo2")
-    console.log($event.target.value)
+    // console.log("hellllooo2")
+    // console.log($event.target.value)
     this.searchTerm = $event.target.value;
     var api_string = 'http://mydisease.info/v1/query?q=' + this.searchTerm
     if(this.searchTerm.length > 0){
@@ -157,7 +161,7 @@ export class AppComponent{
       });;
     }else{
       this.current_disease = '';
-      console.log("OKasdfasfadf")
+      // console.log("OKasdfasfadf")
     }
     // this.ideogram.createIdeogram();
 
@@ -188,9 +192,9 @@ export class AppComponent{
         new_var_array.push(temp_var_array[i])
       }
     }
-    console.log("Nowwww")
+    // console.log("Nowwww")
     
-    console.log(new_var_array)
+    // console.log(new_var_array)
     new_var_array = new_var_array.sort((a, b) => (a.count < b.count) ? 1 : -1)
     return(new_var_array)
   }
@@ -204,28 +208,144 @@ export class AppComponent{
     // console.log(this.current_disease)
     this.current_variant_array = this.getCurrentVariantArray(parseInt($event.target.value))
     this.updatedAnnotations = this.newAnnotationArray(this.current_variant_array)
-    console.log("NEW ANS")
-    console.log(this.updatedAnnotations)
+    // console.log("NEW ANS")
+    // console.log(this.updatedAnnotations)
     // ngAfterContentChecked() {
  
     // }
-  
+    this.createGeneIdeogram([])
     this.createIdeogram(this.updatedAnnotations);
   }
 
+
+  geneAA = [];
+
+  geneSearch(gene_name){
+    // console.log("HISDFHSDOIF")
+    // console.log(gene_name)
+    // this.createGeneIdeogram([])
+
+
+   
+    var api_string = 'https://mygene.info/v3/query?q=' + gene_name + '&fields=symbol%2Cgenomic_pos%2Cname&species=human&size=1'
+
+    this.http.get(api_string).subscribe(resp => {
+        console.log(resp.hits[0])
+        var geneJson = resp.hits[0]
+   
+        // var myGeneA = {
+        //     name: gene.symbol,
+        //     chr: geneJson.hits[0]
+        //     start: genomic_pos.start,
+        //     stop: genomic_pos.end,
+        //     id: genomic_pos.ensemblgene,
+        //     color: color
+        // }
+        // this.dbdata = resp;
+        // console.log(this.dbdata)
+        // this.get_result_names(this.dbdata)
+        // this.searchResults = true;
+      });;
+    }
+
+  
  
   favoriteSeason: string;
   seasons: string[] = ['Winter', 'Spring', 'Summer', 'Autumn'];
 
 
   ngOnInit() {
+    
     // this.createIdeogram(this.example_ans);
     // console.log("hiiasdfoasdjfoiasjfoiasjfosdjfio")
   }
 
+  // `https://webservice.wikipathways.org/findInteractions${queryString}`;
+  // const taxid = ideogram.config.taxid;
+  // const orgUnderscored = ideogram.config.organism.replace(/[ -]/g, '_');
+
+  // const params = `&format=condensed&type=paralogues&target_taxon=${taxid}`;
+  // let path = `/homology/id/${annot.id}?${params}`
 
 
+  // newGeneAnnotationArray(current_variants){
+  //   var newAA = []
+  //   for(var i = 0; i < current_variants.length; i++){
+  //     if(parseInt(current_variants[i].chrom) > 0){
+  //       var newA = {
+  //         name: current_variants[i].rsid,
+  //         chr: current_variants[i].chrom,
+  //         start:parseInt(current_variants[i].pos),
+  //         stop:parseInt(current_variants[i].pos)
+  //       };
+  //       newAA.push(newA)
+  //     }
+  //   }
+  //   return(newAA)
+  // }
 
 
+  createGeneIdeogram(annotations_array) {
+    const ideogram = new Ideogram({
+      organism: 'human',  
+      container: '#gene-ideo-container',
+      chrWidth: 8,
+      chrHeight: 140,
+      chrLabelSize: 10,
+      rows: 2,
+      rotatable: false,
+      annotations: annotations_array
+    });
+    // console.log(ideogram)
+  }
+
+
+  // const annot = {
+  //   name: gene.symbol,
+  //   chr: genomic_pos.chr,
+  //   start: genomic_pos.start,
+  //   stop: genomic_pos.end,
+  //   id: genomic_pos.ensemblgene,
+  //   color: color
+  // };
+
+
+  // config = {
+  //   organism: organism,
+  //   container: '#ideogram-container',
+  //   chrWidth: 8,
+  //   chrHeight: 90,
+  //   chrLabelSize: 10,
+  //   annotationHeight: 5,
+  //   showFullyBanded: false,
+  //   rotatable: false,
+  //   legend: legend,
+  //   onWillShowAnnotTooltip: decorateGene
+  // }
+
+  shape = 'triangle'; 
+
+  legend = [{
+    name: '<b>Click gene to search</b>',
+    rows: [
+      {name: 'Interacting gene', color: 'purple', shape: this.shape},
+      {name: 'Paralogous gene', color: 'pink', shape: this.shape},
+      {name: 'Searched gene', color: 'red', shape: this.shape}
+    ]
+  }];
+
+
+  decorateGene(annot) {
+    const org = Ideogram.getScientificName(Ideogram.config.taxid);
+    const term = `(${annot.name}[gene])+AND+(${org}[orgn])`;
+    const url = `https://ncbi.nlm.nih.gov/gene/?term=${term}`;
+    const description = Ideogram.annotDescriptions[annot.name].split(' [')[0];
+    annot.displayName =
+      `<a target="_blank" href="${url}">${annot.name}</a>
+      <br/>
+      ${description}
+      <br/>`;
+    return annot
+  }
 
 }

@@ -80,16 +80,17 @@
 }
 
 .gene_var_panel{
-  border-bottom: 0px;
-  margin-bottom: 0px;
+  min-height: 420px;
+  /* border-bottom: 0px; */
+  /* margin-bottom: 0px;
   border-bottom-right-radius: 0px;
-  border-bottom-left-radius: 0px;
+  border-bottom-left-radius: 0px; */
 }
 
 .gene_var_panel_2{
-  border-top: 0px;
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px;
+  /* border-top: 0px; */
+  /* border-top-left-radius: 0px;
+  border-top-right-radius: 0px; */
   /* margin-bottom: 0px; */
 }
 
@@ -102,7 +103,7 @@
 }
 
 .gene_var_panel_body{
-  padding-bottom: 0px;
+  /* padding-bottom: 0px; */
 }
 
 #variant_table_content .list-group{

@@ -11,102 +11,50 @@
     <h5>Explore articles, genes, and genetic variants associated with a specific disease</h5>
     <br>
     <div class="input-group md-form form-sm form-2 pl-0">
-      <!-- <form ng-submit="diseaseSearch($event)"> -->
-        <input class="form-control my-0 py-1 red-border" (keyup.enter)="methodInsideYourComponent($event)">
+        <input class="form-control my-0 py-1 red-border" (keyup.enter)="searchForDisease($event)">
         <span class="input-group-text red lighten-3" id="basic-text1"><i class="fa fa-search text-grey"
             aria-hidden="true"></i></span>
-      <!-- </form> -->
     </div>
   </div>
 
-  <!-- <label id="example-radio-group-label">Pick your favorite season</label>
-<mat-radio-group
-  aria-labelledby="example-radio-group-label"
-  class="example-radio-group"
-  [(ngModel)]="favoriteSeason">
-  <mat-radio-button class="example-radio-button" *ngFor="let season of seasons" [value]="season">
-    {{season}}
-  </mat-radio-button>
-</mat-radio-group>
-<div>Your favorite season is: {{favoriteSeason}}</div> -->
-
-<!-- <mat-radio-group class="smallRadio">
-  <mat-radio-button value="1">Option 1</mat-radio-button>
-  <mat-radio-button value="2">Option 2</mat-radio-button>
-</mat-radio-group> -->
-<div class="col-12 search-results-div" *ngIf="searchResults">
-  <div class="panel panel-primary">
-    <div class="panel-heading">Search Results for: {{searchTerm}}</div>
-    <div class="panel-body">
-      <div class="btn-group btn-group-toggle" data-toggle="buttons">
-        <label class="form-check-label btn btn-secondary" for="exampleRadios1" *ngFor="let result_name of result_names; index as i" value={{i}} (click)="handleRadioChange($event)">
-          <input class="form-check-input" type="radio" name="nameRadios" value={{i}} (click)="handleRadioChange($event)">
-          {{result_names[i]}}
-        </label>
+  <div class="col-12 search-results-div" *ngIf="searchResults">
+    <div class="panel panel-primary">
+      <div class="panel-heading">Search Results for: {{searchTerm}}</div>
+      <div class="panel-body">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+          <label class="form-check-label btn btn-secondary" for="exampleRadios1" *ngFor="let result_name of result_names; index as i" value={{i}} (click)="handleRadioChange($event)">
+            <input class="form-check-input" type="radio" name="nameRadios" value={{i}} (click)="handleRadioChange($event)">
+            {{result_names[i]}}
+          </label>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-
-
-  <!-- <div class="form-check" *ngFor="let result_name of result_names; index as i">
-    <input class="form-check-input" type="radio" name="nameRadios" value={{i}} (change)="handleRadioChange($event)">
-    <label class="form-check-label" for="exampleRadios1">
-      {{result_names[i]}}
-    </label>
-  </div> -->
-
-  <!-- <div class="input-group">
-    <div class="input-group-prepend">
-      <div class="input-group-text form-check" *ngFor="let result_name of result_names; index as i">
-        <input class="form-check-input" type="radio" name="nameRadios" value={{i}} (change)="handleRadioChange($event)">
-        <label class="form-check-label" for="exampleRadios1">
-          {{result_names[i]}}
-        </label>
-      </div>
-    </div>
-  </div> -->
-
-
-
-  
-<!-- 
-  <div *ngIf="current_disease">
-    <h5>Genes Related to Disease</h5>
-    <ul class="list-group" >
-      <li *ngFor="let gene of current_disease.disgenet.genes_related_to_disease;" class="list-group-item">{{gene.gene_name}}</li>
-    </ul>
-  </div> -->
-<div class="col-md-4">
-  <div *ngIf="current_disease" class="panel panel-primary">
-    <div class="panel-heading">Genes Related to Disease <span *ngIf="current_disease.disgenet.genes_related_to_disease" class="counter"> Gene Count: {{current_disease.disgenet.genes_related_to_disease.length}}</span></div>
-    <div class="panel-body">
-      <div id="gene_table_content">
-        <ul class="list-group" >
-          <li *ngFor="let gene of current_disease.disgenet.genes_related_to_disease;" class="list-group-item">{{gene.gene_name}}</li>
-        </ul>
+  <div class="col-md-4">
+    <div *ngIf="current_disease" class="panel panel-primary">
+      <div class="panel-heading">Genes Related to Disease <span *ngIf="current_disease.disgenet.genes_related_to_disease" class="counter"> Gene Count: {{current_disease.disgenet.genes_related_to_disease.length}}</span></div>
+      <div class="panel-body">
+        <div id="gene_table_content">
+          <ul class="list-group" >
+            <li (click)="geneSearch(gene.gene_name)" *ngFor="let gene of current_disease.disgenet.genes_related_to_disease;" class="list-group-item">{{gene.gene_name}}</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
-  <!-- <div *ngIf="current_disease">
-    <h5>Gene Variants Related to Disease</h5>
-    <ul class="list-group">
-      <li class="list-group-item" *ngFor="let variant of current_disease.disgenet.variants_related_to_disease;">Chromosome: {{variant.chrom}} Position: {{variant.pos}} Description: <span [innerHTML]="variant.description"></span><b>{{variant.description}}</b></li>
-    </ul>
-  </div> -->
-  <!-- <div *ngIf="current_disease">
-    <h5>Gene Variants Related to Disease</h5>
-    <ul class="list-group">
-      <li class="list-group-item" *ngFor="let variant of current_variant_array;">Chromosome: {{variant.chrom}} Position: {{variant.pos}} Hit Count: {{variant.count}}</li>
-    </ul>
-  </div> -->
-  <div class="col-md-12">
-    <div *ngIf="current_disease" class="panel panel-primary gene_var_panel">
+  <div class="col-md-8">
+    <div *ngIf="current_disease" class="panel panel-primary">
+      <div class="panel-heading">Gene Mapping:</div>
+      <div class="panel-body">
+        <div id="gene-ideo-container"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-5" [ngClass]="{'ideogram_div' : !current_disease}">
+    <div class="panel panel-primary gene_var_panel col-12">
       <div class="panel-heading">Gene Variants Related to Disease <span class="counter"> Variant Count: {{current_variant_array.length}}</span></div>
-      <div class="panel-body gene_var_panel_body">
+      <div class="panel-body gene_var_panel_body col-md-12">
         <ul class="list-header">
           <li class="list-group-item list-header-item">
             <span class="list-spacing">Chromosome</span>
@@ -127,28 +75,18 @@
     </div>
   </div>
 
-  
-  <div class="col-md-12" [ngClass]="{'ideogram_div' : !current_disease}">
-    <div class="panel panel-primary gene_var_panel_2">
-      <!-- <div class="panel-heading">Gene Variants Related to Disease <span class="counter"> Variant Count: {{current_variant_array.length}}</span></div> -->
-      <div class="panel-body">
+  <div class="col-md-7" [ngClass]="{'ideogram_div' : !current_disease}">
+    <div class="panel panel-primary gene_var_panel col-12">
+      <div class="panel-heading">Gene Variants Related to Disease <span class="counter"> Variant Count: {{current_variant_array.length}}</span></div>
+      <div class="panel-body col-md-12">
         <h5>Chromosomal Mapping of Variants: </h5>
         <div id="ideo-container" class="col-md-12 ideo-ok"></div>
       </div>
     </div>
-  </div>  
-<!--   
-  <div id="ideo-container" class="col-md-12"></div> -->
+  </div>
 
-  <br>
-  <!-- <div class="panel panel-primary">
-    <div class="panel-heading">Status</div>
-    <div class="panel-body">
-      <app-bar-chart [data]="data | async"></app-bar-chart> -->
-      <!-- <app-ideogram></app-ideogram> -->
-    <!-- </div>
-  </div> -->
-  
+
+
 </div>
 <!-- 
 <ngbd-table-pagination *ngIf="current_disease"></ngbd-table-pagination> -->
