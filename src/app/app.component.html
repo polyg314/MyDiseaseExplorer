@@ -103,10 +103,10 @@
       <li class="list-group-item" *ngFor="let variant of current_variant_array;">Chromosome: {{variant.chrom}} Position: {{variant.pos}} Hit Count: {{variant.count}}</li>
     </ul>
   </div> -->
-  <div class="col-md-8">
-    <div *ngIf="current_disease" class="panel panel-primary">
+  <div class="col-md-12">
+    <div *ngIf="current_disease" class="panel panel-primary gene_var_panel">
       <div class="panel-heading">Gene Variants Related to Disease <span class="counter"> Variant Count: {{current_variant_array.length}}</span></div>
-      <div class="panel-body">
+      <div class="panel-body gene_var_panel_body">
         <ul class="list-header">
           <li class="list-group-item list-header-item">
             <span class="list-spacing">Chromosome</span>
@@ -128,8 +128,17 @@
   </div>
 
   
-  
-  <div id="ideo-container" class="col-md-12"></div>
+  <div class="col-md-12" [ngClass]="{'ideogram_div' : !current_disease}">
+    <div class="panel panel-primary gene_var_panel_2">
+      <!-- <div class="panel-heading">Gene Variants Related to Disease <span class="counter"> Variant Count: {{current_variant_array.length}}</span></div> -->
+      <div class="panel-body">
+        <h5>Chromosomal Mapping of Variants: </h5>
+        <div id="ideo-container" class="col-md-12 ideo-ok"></div>
+      </div>
+    </div>
+  </div>  
+<!--   
+  <div id="ideo-container" class="col-md-12"></div> -->
 
   <br>
   <!-- <div class="panel panel-primary">

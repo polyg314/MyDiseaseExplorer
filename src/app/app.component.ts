@@ -31,11 +31,13 @@ export class AppComponent{
 
   constructor(private http: HttpClient) {
     this.data = this.http.get<DataModel>('./assets/data.json');
-    // this.http.get('./assets/diabetes.json').subscribe(resp => {
-    //   this.dbdata = resp;
-    //   console.log(this.dbdata)
-    //   this.get_result_names(this.dbdata)
-    // });;
+    this.http.get('./assets/diabetes.json').subscribe(resp => {
+      this.dbdata = resp;
+      console.log(this.dbdata)
+      this.get_result_names(this.dbdata)
+      this.searchTerm = 'diabetes';
+      this.searchResults = true;
+    });;
   }
 
   example_ans = [{
@@ -65,6 +67,10 @@ export class AppComponent{
     const ideogram = new Ideogram({
       organism: 'human',  
       container: '#ideo-container',
+      chrWidth: 8,
+      chrHeight: 140,
+      chrLabelSize: 10,
+      rows: 2,
       annotations: annotations_array
     });
     console.log(ideogram)
@@ -216,5 +222,10 @@ export class AppComponent{
     // this.createIdeogram(this.example_ans);
     // console.log("hiiasdfoasdjfoiasjfoiasjfosdjfio")
   }
+
+
+
+
+
 
 }
