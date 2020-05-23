@@ -5,7 +5,7 @@ const app = express();
 app.use(express.static('./dist'));
 
 
-app.get('/*', (req, res) =>
+app.get('*', (req, res) =>
     res.redirect('http://' + req.headers.host + req.url).sendFile('index.html', {root: 'dist/'}),
 );
 
