@@ -2,10 +2,19 @@ const express = require('express');
 
 const app = express();
 
+
 app.use(express.static('./dist'));
 
+console.log("HI2")
 
-app.get('/*', (req, res) =>  
+app.use(function(request, response){
+    if(request.secure){
+      response.redirect("http://" + request.headers.host + request.url);
+    }
+});
+
+
+app.get('/*', (req, res) =>
     res.sendFile('index.html', {root: 'dist/'}),
 );
 
