@@ -184,7 +184,7 @@ export class AppComponent implements AfterViewInit {
     // console.log("hellllooo2")
     // console.log($event.target.value)
     this.searchTerm = $event.target.value;
-    var api_string = '//mydisease.info/v1/query?q=' + this.searchTerm
+    var api_string = 'http://mydisease.info/v1/query?q=' + this.searchTerm
     if(this.searchTerm.length > 0){
       this.http.get(api_string).subscribe(resp => {
         this.dbdata = resp;
