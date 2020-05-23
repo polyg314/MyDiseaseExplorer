@@ -5,13 +5,14 @@ const app = express();
 
 app.use(express.static('./dist'));
 
-console.log("HI2")
+// console.log("HI2")
 
-app.use(function(request, response){
-    if(request.secure){
-      response.redirect("http://" + request.headers.host + request.url);
-    }
-});
+// app.use(function(request, response){
+//     if(request.secure){
+//         console.log("WHATTT")
+//       response.redirect("http://" + request.headers.host + request.url);
+//     }
+// });
 
 
 app.get('/*', (req, res) =>
