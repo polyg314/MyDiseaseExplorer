@@ -4,9 +4,17 @@ const app = express();
 
 app.use(express.static('./dist'));
 
+if(process.env.NODE_ENV === 'production') {
+    app.use((req, res, next) => {
+      if (req.header('x-forwarded-proto') === 'https')
+        res.redirect(`http://${req.header('host')}${req.url}`)
+      else
+        next()
+    })
+  }
 
 app.get('*', (req, res) =>
-    res.redirect('http://' + req.headers.host + req.url).sendFile('index.html', {root: 'dist/'}),
+    res.sendFile('index.html', {root: 'dist/'}),
 );
 
 
