@@ -4,7 +4,7 @@ import { AppComponent } from './app.component';
 import { IdeogramComponent } from './ideogram/ideogram.component';
 import { BarChartComponent } from './bar-chart/bar-chart.component';
 import { HttpClientModule } from '@angular/common/http';
-import {MatRadioModule} from '@angular/material/radio';
+// import {MatRadioModule} from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
@@ -16,7 +16,7 @@ import { FormsModule } from '@angular/forms';
   imports: [
     BrowserModule,
     HttpClientModule,
-    MatRadioModule,
+    // MatRadioModule,
     FormsModule 
   ],
   providers: [],
