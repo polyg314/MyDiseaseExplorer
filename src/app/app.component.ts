@@ -44,7 +44,7 @@ export class AppComponent implements AfterViewInit {
   ngAfterViewInit(){
     
     this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = '#f9f5f6';
-    this.elementRef.nativeElement.ownerDocument.body.style.overflow.x = 'hidden';
+    this.elementRef.nativeElement.ownerDocument.body.style.overflow = 'hidden';
     
  }
 
@@ -67,6 +67,9 @@ export class AppComponent implements AfterViewInit {
         };
         newAA.push(newA)
       }
+    }
+    if(newAA.length === 0){
+      newAA.push({})
     }
     return(newAA)
   }
@@ -110,20 +113,40 @@ export class AppComponent implements AfterViewInit {
           var new_disgenet = result_json.hits[i].disgenet[0]
           if(result_json.hits[i].disgenet.length > 1){
             for(var j = 1; j < result_json.hits[i].disgenet.length; j++){
-              if(result_json.hits[i].disgenet[j].genes_related_to_disease.constructor === Array){
-                new_disgenet.genes_related_to_disease = new_disgenet.genes_related_to_disease.concat(result_json.hits[i].disgenet[j].genes_related_to_disease)
+              if(result_json.hits[i].disgenet[j].genes_related_to_disease){
+                if(result_json.hits[i].disgenet[j].genes_related_to_disease.constructor === Array){
+                  if(new_disgenet.genes_related_to_disease){
+                    new_disgenet.genes_related_to_disease = new_disgenet.genes_related_to_disease.concat(result_json.hits[i].disgenet[j].genes_related_to_disease)
+                  }else{
+                    new_disgenet.genes_related_to_disease = result_json.hits[i].disgenet[j].genes_related_to_disease
+                  }
+                }
+                else if(typeof(result_json.hits[i].disgenet[j].genes_related_to_disease) === "object"){
+                  if(new_disgenet.genes_related_to_disease){
+                    new_disgenet.genes_related_to_disease.push(result_json.hits[i].disgenet[j].genes_related_to_disease)
+                  }
+                  else{
+                    new_disgenet.genes_related_to_disease = [result_json.hits[i].disgenet[j].genes_related_to_disease]
+                  }
+                }
               }
-              else if(typeof(result_json.hits[i].disgenet[j].genes_related_to_disease) === "object"){
-                // console.log("muah")
-                new_disgenet.genes_related_to_disease.push(result_json.hits[i].disgenet[j].genes_related_to_disease)
+              if(result_json.hits[i].disgenet[j].variants_related_to_disease){
+                if(result_json.hits[i].disgenet[j].variants_related_to_disease.constructor === Array){
+                  if(new_disgenet.variants_related_to_disease){
+                    new_disgenet.variants_related_to_disease = new_disgenet.variants_related_to_disease.concat(result_json.hits[i].disgenet[j].variants_related_to_disease)
+                  }else{
+                    new_disgenet.variants_related_to_disease = result_json.hits[i].disgenet[j].variants_related_to_disease
+                  }
+                }
+                else if(typeof(result_json.hits[i].disgenet[j].variants_related_to_disease === "object")){
+                  if(new_disgenet.variants_related_to_disease){
+                    new_disgenet.variants_related_to_disease.push(result_json.hits[i].disgenet[j].variants_related_to_disease)
+                  }
+                  else{
+                    new_disgenet.variants_related_to_disease = [result_json.hits[i].disgenet[j].variants_related_to_disease]
+                  }
+                }
               }
-              if(result_json.hits[i].disgenet[j].variants_related_to_disease.constructor === Array){
-                new_disgenet.variants_related_to_disease = new_disgenet.variants_related_to_disease.concat(result_json.hits[i].disgenet[j].variants_related_to_disease)
-              }
-              else if(typeof(result_json.hits[i].disgenet[j].variants_related_to_disease === "object")){
-                new_disgenet.variants_related_to_disease.push(result_json.hits[i].disgenet[j].variants_related_to_disease)
-              }
-              
             }
           }
           result_json.hits[i].disgenet = new_disgenet
@@ -155,6 +178,7 @@ export class AppComponent implements AfterViewInit {
   console.log("hellllooo")
   }
   searchForDisease($event){
+    this.elementRef.nativeElement.ownerDocument.body.style.overflow = 'visible';
     this.elementRef.nativeElement.ownerDocument.body.style.transition = 'all 2s ease 0s';
     this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = '#fff';
     // console.log("hellllooo2")
@@ -186,34 +210,33 @@ export class AppComponent implements AfterViewInit {
 
   getCurrentVariantArray(id){
     var temp_var_array = this.current_disease.disgenet.variants_related_to_disease
-    console.log("vavavava")
-    console.log(this.current_disease.disgenet)
     var new_var_array = []
-    new_var_array.push(temp_var_array[0])
-    new_var_array[0].count = 1;
-    for(var i = 1; i < temp_var_array.length; i++){
-      var repeat = false;
-      for(var j = 0; j < new_var_array.length; j++){
-        if(temp_var_array[i].rsid === new_var_array[j].rsid){
-          repeat = true;
-          new_var_array[j].count = new_var_array[j].count + 1;
+    if(temp_var_array){
+      new_var_array.push(temp_var_array[0])
+      new_var_array[0].count = 1;
+      for(var i = 1; i < temp_var_array.length; i++){
+        var repeat = false;
+        for(var j = 0; j < new_var_array.length; j++){
+          if(temp_var_array[i].rsid === new_var_array[j].rsid){
+            repeat = true;
+            new_var_array[j].count = new_var_array[j].count + 1;
+          }
+        }
+        if(repeat === false){
+          temp_var_array[i].count = 1;
+          new_var_array.push(temp_var_array[i])
         }
       }
-      if(repeat === false){
-        temp_var_array[i].count = 1;
-        new_var_array.push(temp_var_array[i])
-      }
+      new_var_array = new_var_array.sort((a, b) => (a.count < b.count) ? 1 : -1)
     }
-    // console.log("Nowwww")
-    
-    // console.log(new_var_array)
-    new_var_array = new_var_array.sort((a, b) => (a.count < b.count) ? 1 : -1)
     return(new_var_array)
   }
 
   updatedAnnotations = []
   current_disease_name = '';
   handleRadioChange($event){
+    this.NotMappable = '';
+    this.currentSearchGene = {};
     this.createGeneIdeogram([{}])
     // console.log($event.target.value)
     // console.log(this.results_array)
@@ -236,12 +259,13 @@ export class AppComponent implements AfterViewInit {
   geneAA = [];
   geneJson: any;
   currentSearchGene: any;
+  NotMappable = '';
   geneSearch(gene_name){
     // console.log("HISDFHSDOIF")
     // console.log(gene_name)
     // this.createGeneIdeogram([])
     this.geneAA = []
-
+    this.NotMappable = '';
    
     var api_string = 'https://mygene.info/v3/query?q=' + gene_name + '&fields=symbol%2Cgenomic_pos%2Cname&species=human&size=1'
 
@@ -266,6 +290,7 @@ export class AppComponent implements AfterViewInit {
         }
         else{
           this.geneJson = []
+          this.NotMappable = gene_name
         }
    
         // var myGeneA = {
@@ -319,10 +344,13 @@ export class AppComponent implements AfterViewInit {
   //   return(newAA)
   // }
 
-
+NoGeneSelected = true;
   createGeneIdeogram(annotations_array) {
-    if(annotations_array.length < 1){
+    if(!(annotations_array[0].name)){
       console.log("ooooo")
+      this.NoGeneSelected = true;
+    }else{
+      this.NoGeneSelected = false;
     }
     const ideogram = new Ideogram({
       organism: 'human',  

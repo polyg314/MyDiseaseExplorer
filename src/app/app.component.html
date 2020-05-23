@@ -27,15 +27,19 @@
         <div class="panel-heading heading-underline">
           <h5>
             <span class="red-text">
-              Gene<span *ngIf="current_disease.disgenet.genes_related_to_disease.length > 1">s</span>
-            </span><span *ngIf="current_disease.disgenet.genes_related_to_disease"> Related to {{current_disease_name}}</span>:
+              Gene<span *ngIf="current_disease.disgenet.genes_related_to_disease">
+                    <span *ngIf="current_disease.disgenet.genes_related_to_disease.length > 1">s</span>
+                  </span>
+            </span><span *ngIf="current_disease_name"> Related to {{current_disease_name}}</span>:
           </h5>
         </div>
         <div class="panel-body gene-list-panel-body">
-          <div class="col-md-12 col-lg-2">
+          <div class="col-md-12 col-lg-3">
             <div class="panel-heading" id="related-gene-div">
               <h5>
-                  Gene<span *ngIf="current_disease.disgenet.genes_related_to_disease.length > 1">s</span>
+                Gene<span *ngIf="current_disease.disgenet.genes_related_to_disease">
+                  <span *ngIf="current_disease.disgenet.genes_related_to_disease.length > 1">s</span>
+                </span>
                   <span *ngIf="current_disease.disgenet.genes_related_to_disease"> ({{current_disease.disgenet.genes_related_to_disease.length}})</span>:
               </h5>
             </div>
@@ -45,10 +49,13 @@
               </ul>
             </div>
           </div>
-          <div class="col-md-12 col-lg-10" id="gene-ideo-div-outer">
+          <div class="col-md-12 col-lg-9" id="gene-ideo-div-outer">
             <div class="panel-heading gene-mapping-panel-heading">
               <h5>
-                Chromosomal Gene Mapping: <span *ngIf="currentSearchGene">{{currentSearchGene.name}}, {{currentSearchGene.description}}</span>
+                Chromosomal Gene Mapping: 
+                <span *ngIf="NoGeneSelected && !(NotMappable)"><i>please select gene</i></span>
+                <span *ngIf="NotMappable"><i>{{NotMappable}} not mappable</i></span>
+                <span *ngIf="currentSearchGene.name">{{currentSearchGene.name}}, {{currentSearchGene.description}}</span>
               </h5>
             </div>
             <div id="gene-ideo-div">
