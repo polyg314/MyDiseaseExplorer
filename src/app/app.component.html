@@ -1,7 +1,7 @@
 <div class="container" id="page-container">
   <div class="jumbotron" id="main-jumbo" [ngClass]="{'vertical-center': !searchResults}">
-    <h2 id="main-title"><span id="my-dis">MyDisease.info</span> Explorer</h2>
-    <h5 id="main-jumbo-description">Explore articles, genes, and genetic variants associated with a specific disease</h5>
+    <h2 id="main-title"><span class="heading-contain"><span id="my-dis">MyDisease.info</span> Explorer</span></h2>
+    <h5 id="main-jumbo-description"><span class="heading-contain">Explore articles, genes, and genetic variants associated with a specific disease</span></h5>
     <br>
     <div class="input-group md-form form-sm form-2 pl-0">
         <input placeholder="Search for disease" class="form-control my-0 py-1 red-border" (keyup.enter)="searchForDisease($event)">
@@ -9,7 +9,7 @@
             aria-hidden="true"></i></span>
     </div>
   </div>
-  <div class="col-12 search-results-div no-padding" [ngClass]="{'show-results': searchResults}">
+  <div class="col-12 search-results-div no-padding padding-40" [ngClass]="{'show-results': searchResults}">
     <div class="panel">
       <div class="panel-heading search-heading"><h5>Search Results for <b id="search-term">{{searchTerm}}</b>:</h5></div>
       <div class="panel-body search-body">
@@ -22,7 +22,7 @@
       </div>
     </div>
   </div>
-  <div id="main-gene-div" class="col-md-12 col-lg-12">
+  <div id="main-gene-div" class="col-md-12 col-lg-12 padding-40">
       <div *ngIf="current_disease" class="panel col-md-12 col-lg-12">
         <div class="panel-heading heading-underline">
           <h5>
@@ -61,7 +61,7 @@
   </div>
 
 
-  <div [ngClass]="{'ideogram_div' : !current_disease}" class="panel gene_var_panel col-12">
+  <div [ngClass]="{'ideogram_div' : !current_disease}" class="panel gene_var_panel col-12 padding-40">
       <div class="panel-body gene_var_panel_body col-md-12">
         <div class="panel-heading heading-underline margin-20-bottom">
           <h5>
@@ -71,28 +71,28 @@
             Related to {{current_disease_name}}:
           </h5>
         </div>
-        <div class="col-md-6 col-lg-5">
+        <div class="col-md-5 col-lg-5">
 
           <ul class="list-header">
             <li class="list-group-item list-header-item variant-table-header">
-            <span class="list-spacing"><b>Chromosome</b></span>
-            <span class="list-spacing"><b>Position</b></span>
-            <span class="list-spacing"><b>RSID</b></span>
-            <span class="list-spacing"><b>Hit Count</b></span>
+            <span class="list-spacing align-center"><b>Chrom</b></span>
+            <span class="list-spacing align-center"><b>Position</b></span>
+            <span class="list-spacing align-center"><b>RSID</b></span>
+            <span class="list-spacing align-center"><b>Hit Count</b></span>
             </li>
           </ul>
           <div id="variant_table_content">
             <ul class="list-group">
               <li class="list-group-item" *ngFor="let variant of current_variant_array;">
-                <span class="list-spacing">{{variant.chrom}}</span>
-                <span class="list-spacing">{{variant.pos}}</span>
-                <span class="list-spacing">{{variant.rsid}}</span>
-                <span class="list-spacing">{{variant.count}}</span>
+                <span class="list-spacing align-center">{{variant.chrom}}</span>
+                <span class="list-spacing align-center">{{variant.pos}}</span>
+                <span class="list-spacing align-center">{{variant.rsid}}</span>
+                <span class="list-spacing align-center">{{variant.count}}</span>
               </li>
             </ul>
           </div>
         </div>
-        <div class="col-md-6 col-lg-7">
+        <div class="col-md-7 col-lg-7 no-right-padding">
           <div class="panel-heading">
             <h5>Chromosomal Variant Mapping: </h5>
           </div>

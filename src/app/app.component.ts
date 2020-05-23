@@ -44,6 +44,7 @@ export class AppComponent implements AfterViewInit {
   ngAfterViewInit(){
     
     this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = '#f9f5f6';
+    this.elementRef.nativeElement.ownerDocument.body.style.overflow.x = 'hidden';
     
  }
 
@@ -171,6 +172,8 @@ export class AppComponent implements AfterViewInit {
       this.current_disease = '';
       // console.log("OKasdfasfadf")
     }
+    
+    
     // this.ideogram.createIdeogram();
 
     // this.createIdeogram();
@@ -211,6 +214,7 @@ export class AppComponent implements AfterViewInit {
   updatedAnnotations = []
   current_disease_name = '';
   handleRadioChange($event){
+    this.createGeneIdeogram([{}])
     // console.log($event.target.value)
     // console.log(this.results_array)
     this.current_disease = this.results_array[parseInt($event.target.value)]
@@ -224,7 +228,7 @@ export class AppComponent implements AfterViewInit {
     // ngAfterContentChecked() {
  
     // }
-    this.createGeneIdeogram([])
+    // this.createGeneIdeogram([])
     this.createIdeogram(this.updatedAnnotations);
   }
 
@@ -317,6 +321,9 @@ export class AppComponent implements AfterViewInit {
 
 
   createGeneIdeogram(annotations_array) {
+    if(annotations_array.length < 1){
+      console.log("ooooo")
+    }
     const ideogram = new Ideogram({
       organism: 'human',  
       container: '#gene-ideo-container',
