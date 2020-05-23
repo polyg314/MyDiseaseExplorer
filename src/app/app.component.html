@@ -1,28 +1,20 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<!-- <div style="text-align:center">
-  <h1>
-    
-  </h1>
-</div> -->
-<br>
-<div class="container">
-  <div class="jumbotron">
-    <h2>{{title}}</h2>
-    <h5>Explore articles, genes, and genetic variants associated with a specific disease</h5>
+<div class="container" id="page-container">
+  <div class="jumbotron" id="main-jumbo" [ngClass]="{'vertical-center': !searchResults}">
+    <h2 id="main-title"><span id="my-dis">MyDisease.info</span> Explorer</h2>
+    <h5 id="main-jumbo-description">Explore articles, genes, and genetic variants associated with a specific disease</h5>
     <br>
     <div class="input-group md-form form-sm form-2 pl-0">
-        <input class="form-control my-0 py-1 red-border" (keyup.enter)="searchForDisease($event)">
+        <input placeholder="Search for disease" class="form-control my-0 py-1 red-border" (keyup.enter)="searchForDisease($event)">
         <span class="input-group-text red lighten-3" id="basic-text1"><i class="fa fa-search text-grey"
             aria-hidden="true"></i></span>
     </div>
   </div>
-
-  <div class="col-12 search-results-div" *ngIf="searchResults">
-    <div class="panel panel-primary">
-      <div class="panel-heading">Search Results for: {{searchTerm}}</div>
-      <div class="panel-body">
+  <div class="col-12 search-results-div no-padding" [ngClass]="{'show-results': searchResults}">
+    <div class="panel">
+      <div class="panel-heading search-heading"><h5>Search Results for <b id="search-term">{{searchTerm}}</b>:</h5></div>
+      <div class="panel-body search-body">
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-          <label class="form-check-label btn btn-secondary" for="exampleRadios1" *ngFor="let result_name of result_names; index as i" value={{i}} (click)="handleRadioChange($event)">
+          <label class="form-check-label btn btn-secondary search-buttons" for="exampleRadios1" *ngFor="let result_name of result_names; index as i" value={{i}} (click)="handleRadioChange($event)">
             <input class="form-check-input" type="radio" name="nameRadios" value={{i}} (click)="handleRadioChange($event)">
             {{result_names[i]}}
           </label>
@@ -30,60 +22,88 @@
       </div>
     </div>
   </div>
+  <div id="main-gene-div" class="col-md-12 col-lg-12">
+      <div *ngIf="current_disease" class="panel col-md-12 col-lg-12">
+        <div class="panel-heading heading-underline">
+          <h5>
+            <span class="red-text">
+              Gene<span *ngIf="current_disease.disgenet.genes_related_to_disease.length > 1">s</span>
+            </span><span *ngIf="current_disease.disgenet.genes_related_to_disease"> Related to {{current_disease_name}}</span>:
+          </h5>
+        </div>
+        <div class="panel-body gene-list-panel-body">
+          <div class="col-md-12 col-lg-2">
+            <div class="panel-heading" id="related-gene-div">
+              <h5>
+                  Gene<span *ngIf="current_disease.disgenet.genes_related_to_disease.length > 1">s</span>
+                  <span *ngIf="current_disease.disgenet.genes_related_to_disease"> ({{current_disease.disgenet.genes_related_to_disease.length}})</span>:
+              </h5>
+            </div>
+            <div id="gene_table_content">
+              <ul class="list-group" >
+                <li (click)="geneSearch(gene.gene_name)" *ngFor="let gene of current_disease.disgenet.genes_related_to_disease;" class="list-group-item">{{gene.gene_name}}</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-12 col-lg-10" id="gene-ideo-div-outer">
+            <div class="panel-heading gene-mapping-panel-heading">
+              <h5>
+                Chromosomal Gene Mapping: <span *ngIf="currentSearchGene">{{currentSearchGene.name}}, {{currentSearchGene.description}}</span>
+              </h5>
+            </div>
+            <div id="gene-ideo-div">
+              <div id="gene-ideo-container"></div>
+            </div>
+          </div>
 
-  <div class="col-md-12 col-lg-2">
-    <div *ngIf="current_disease" class="panel panel-primary">
-      <div class="panel-heading"><span *ngIf="current_disease.disgenet.genes_related_to_disease">{{current_disease.disgenet.genes_related_to_disease.length}}</span> Related Gene<span *ngIf="current_disease.disgenet.genes_related_to_disease.length > 1">s</span></div>
-      <div class="panel-body gene-list-panel-body">
-        <div id="gene_table_content">
-          <ul class="list-group" >
-            <li (click)="geneSearch(gene.gene_name)" *ngFor="let gene of current_disease.disgenet.genes_related_to_disease;" class="list-group-item">{{gene.gene_name}}</li>
-          </ul>
         </div>
       </div>
-    </div>
   </div>
-  <div class="col-md-12 col-lg-10">
-    <div *ngIf="current_disease" class="panel panel-primary">
-      <div class="panel-heading">Gene Mapping: <span *ngIf="currentSearchGene">{{currentSearchGene.name}} , {{currentSearchGene.description}}</span></div>
-      <div class="panel-body gene-ideo-panel-body">
-        <div id="gene-ideo-container"></div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-5" [ngClass]="{'ideogram_div' : !current_disease}">
-    <div class="panel panel-primary gene_var_panel col-12">
-      <div class="panel-heading">Gene Variants Related to Disease <span class="counter"> Variant Count: {{current_variant_array.length}}</span></div>
+
+
+  <div [ngClass]="{'ideogram_div' : !current_disease}" class="panel gene_var_panel col-12">
       <div class="panel-body gene_var_panel_body col-md-12">
-        <ul class="list-header">
-          <li class="list-group-item list-header-item">
-            <span class="list-spacing">Chromosome</span>
-            <span class="list-spacing">Position</span>
-            <span class="list-spacing">Hit Count</span>
-          </li>
-        </ul>
-        <div id="variant_table_content">
-          <ul class="list-group">
-            <li class="list-group-item" *ngFor="let variant of current_variant_array;">
-              <span class="list-spacing">{{variant.chrom}}</span>
-              <span class="list-spacing">{{variant.pos}}</span>
-              <span class="list-spacing">{{variant.count}}</span>
+        <div class="panel-heading heading-underline margin-20-bottom">
+          <h5>
+          <span class="red-text">
+            Variants ({{current_variant_array.length}})
+          </span>
+            Related to {{current_disease_name}}:
+          </h5>
+        </div>
+        <div class="col-md-6 col-lg-5">
+
+          <ul class="list-header">
+            <li class="list-group-item list-header-item variant-table-header">
+            <span class="list-spacing"><b>Chromosome</b></span>
+            <span class="list-spacing"><b>Position</b></span>
+            <span class="list-spacing"><b>RSID</b></span>
+            <span class="list-spacing"><b>Hit Count</b></span>
             </li>
           </ul>
+          <div id="variant_table_content">
+            <ul class="list-group">
+              <li class="list-group-item" *ngFor="let variant of current_variant_array;">
+                <span class="list-spacing">{{variant.chrom}}</span>
+                <span class="list-spacing">{{variant.pos}}</span>
+                <span class="list-spacing">{{variant.rsid}}</span>
+                <span class="list-spacing">{{variant.count}}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-7">
+          <div class="panel-heading">
+            <h5>Chromosomal Variant Mapping: </h5>
+          </div>
+          <div>
+            
+            <div id="ideo-container" class="col-md-12 ideo-ok"></div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="col-md-7" [ngClass]="{'ideogram_div' : !current_disease}">
-    <div class="panel panel-primary gene_var_panel col-12">
-      <div class="panel-heading">Gene Variants Related to Disease <span class="counter"> Variant Count: {{current_variant_array.length}}</span></div>
-      <div class="panel-body col-md-12">
-        <h5>Chromosomal Mapping of Variants: </h5>
-        <div id="ideo-container" class="col-md-12 ideo-ok"></div>
-      </div>
-    </div>
-  </div>
+ 
 
 
 

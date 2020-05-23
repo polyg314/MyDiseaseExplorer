@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ViewChild, OnInit} from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit, ElementRef} from '@angular/core';
 import { Observable } from 'rxjs';
 import { DataModel } from './data/data.model';
 import Ideogram from 'ideogram';
@@ -13,11 +13,13 @@ import { IdeogramComponent} from './ideogram/ideogram.component'
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 
 
-export class AppComponent{
+export class AppComponent implements AfterViewInit {
+
+
   // @ViewChild(IdeogramComponent, {static: false}) child;
   // ngAfterContentChecked() {
   //   if(this.current_variant_array.length > 0){
@@ -29,16 +31,21 @@ export class AppComponent{
   //   console.log(this.child)
   // }
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private elementRef: ElementRef) {
     this.data = this.http.get<DataModel>('./assets/data.json');
     this.http.get('./assets/diabetes.json').subscribe(resp => {
       this.dbdata = resp;
       console.log(this.dbdata)
       this.get_result_names(this.dbdata)
       this.searchTerm = 'diabetes';
-      this.searchResults = true;
+      // this.searchResults = true;
     });;
   }
+  ngAfterViewInit(){
+    
+    this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = '#f9f5f6';
+    
+ }
 
   example_ans = [{
     name: 'BRCA1',
@@ -128,7 +135,7 @@ export class AppComponent{
           }
         }            
         // console.log(result_json.hits[i])
-        this.result_names.push(result_json.hits[i].mondo.label)
+        this.result_names.push(result_json.hits[i].disgenet.xrefs.disease_name)
         this.result_ids.push(result_json.hits[i]._id)
         this.result_defs.push(result_json.hits[i].mondo.definition)
         this.results_array.push(result_json.hits[i])
@@ -147,7 +154,8 @@ export class AppComponent{
   console.log("hellllooo")
   }
   searchForDisease($event){
-    
+    this.elementRef.nativeElement.ownerDocument.body.style.transition = 'all 2s ease 0s';
+    this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = '#fff';
     // console.log("hellllooo2")
     // console.log($event.target.value)
     this.searchTerm = $event.target.value;
@@ -175,7 +183,8 @@ export class AppComponent{
 
   getCurrentVariantArray(id){
     var temp_var_array = this.current_disease.disgenet.variants_related_to_disease
-
+    console.log("vavavava")
+    console.log(this.current_disease.disgenet)
     var new_var_array = []
     new_var_array.push(temp_var_array[0])
     new_var_array[0].count = 1;
@@ -200,10 +209,12 @@ export class AppComponent{
   }
 
   updatedAnnotations = []
+  current_disease_name = '';
   handleRadioChange($event){
     // console.log($event.target.value)
     // console.log(this.results_array)
     this.current_disease = this.results_array[parseInt($event.target.value)]
+    this.current_disease_name = this.result_names[parseInt($event.target.value)]
     // console.log("HIHIHIH")
     // console.log(this.current_disease)
     this.current_variant_array = this.getCurrentVariantArray(parseInt($event.target.value))
