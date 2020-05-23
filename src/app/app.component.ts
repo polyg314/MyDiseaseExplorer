@@ -232,6 +232,7 @@ export class AppComponent implements AfterViewInit {
     return(new_var_array)
   }
 
+  
   updatedAnnotations = []
   current_disease_name = '';
   handleRadioChange($event){
