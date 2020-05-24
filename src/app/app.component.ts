@@ -172,6 +172,7 @@ export class AppComponent implements AfterViewInit {
 
   searchTerm = '';
   searchResults = false;
+  searchInputValue = '';
  
   diseaseName:string;
   diseaseSearch($event: any){
@@ -181,8 +182,6 @@ export class AppComponent implements AfterViewInit {
     this.elementRef.nativeElement.ownerDocument.body.style.overflow = 'visible';
     this.elementRef.nativeElement.ownerDocument.body.style.transition = 'all 2s ease 0s';
     this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = '#fff';
-    // console.log("hellllooo2")
-    // console.log($event.target.value)
     this.searchTerm = $event.target.value;
     var api_string = 'http://mydisease.info/v1/query?q=' + this.searchTerm
     if(this.searchTerm.length > 0){
@@ -196,13 +195,25 @@ export class AppComponent implements AfterViewInit {
       this.current_disease = '';
       // console.log("OKasdfasfadf")
     }
-    
-    
-    // this.ideogram.createIdeogram();
-
-    // this.createIdeogram();
-    // console.log($event)
   }
+  searchForDiseaseButton(){
+    this.elementRef.nativeElement.ownerDocument.body.style.overflow = 'visible';
+    this.elementRef.nativeElement.ownerDocument.body.style.transition = 'all 2s ease 0s';
+    this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = '#fff';
+    this.searchTerm = this.searchInputValue;
+    var api_string = 'http://mydisease.info/v1/query?q=' + this.searchTerm
+    if(this.searchTerm.length > 0){
+      this.http.get(api_string).subscribe(resp => {
+        this.dbdata = resp;
+        console.log(this.dbdata)
+        this.get_result_names(this.dbdata)
+        this.searchResults = true;
+      });;
+    }else{
+      this.current_disease = '';
+    }
+  }
+
 
 
 
