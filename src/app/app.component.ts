@@ -42,18 +42,10 @@ export class AppComponent implements AfterViewInit {
     });;
   }
   ngAfterViewInit(){
-    
     this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = '#f9f5f6';
     this.elementRef.nativeElement.ownerDocument.body.style.overflow = 'hidden';
-    
  }
 
-  example_ans = [{
-    name: 'BRCA1',
-    chr: '17',
-    start: 43044294,
-    stop: 43125482
-  }]
 
   newAnnotationArray(current_variants){
     var newAA = []
@@ -63,7 +55,8 @@ export class AppComponent implements AfterViewInit {
           name: current_variants[i].rsid,
           chr: current_variants[i].chrom,
           start:parseInt(current_variants[i].pos),
-          stop:parseInt(current_variants[i].pos)
+          stop:parseInt(current_variants[i].pos),
+          color: '#cc1100'
         };
         newAA.push(newA)
       }
@@ -275,12 +268,18 @@ export class AppComponent implements AfterViewInit {
   geneJson: any;
   currentSearchGene: any;
   NotMappable = '';
+  wikiJson: any;
+  IxnGA = [];
+  IAgeneJson: any;
   geneSearch(gene_name){
     // console.log("HISDFHSDOIF")
     // console.log(gene_name)
     // this.createGeneIdeogram([])
     this.geneAA = []
     this.NotMappable = '';
+    this.IxnGA = [];
+    this.NoGeneSelected = false;
+ 
    
     var api_string = 'https://mygene.info/v3/query?q=' + gene_name + '&fields=symbol%2Cgenomic_pos%2Cname&species=human&size=1'
 
@@ -295,31 +294,72 @@ export class AppComponent implements AfterViewInit {
             start: this.geneJson.hits[0].genomic_pos.start,
             stop: this.geneJson.hits[0].genomic_pos.end,
             id: this.geneJson.hits[0].genomic_pos.ensemblgene,
-            color: 'red'
+            color: '#cc1100'
           }
           this.currentSearchGene = myGeneA
           this.currentSearchGene.description = this.geneJson.hits[0].name,
           console.log(myGeneA)
           this.geneAA.push(myGeneA)
+          var wiki_api = 'https://webservice.wikipathways.org/findInteractions?query='+gene_name+'&format=json'
+          
+          this.http.get(wiki_api).subscribe(resp2 => {
+            console.log(resp2)
+            this.wikiJson = resp2
+            var temp_gene_array = [];
+            var results_array = this.wikiJson.result.filter(function(item){
+              return item.species = "Homo sapiens"        
+            });
+            var max_results = 20;
+            if(results_array.length < 20){
+              max_results = results_array.length
+            }
+            // put all interactions in array 
+            for(var i = 0; i < max_results; i++){
+              temp_gene_array = temp_gene_array.concat(results_array[i].fields.left.values)
+              temp_gene_array = temp_gene_array.concat(results_array[i].fields.right.values)
+            }
+
+            // make sure interaction is with a gene
+            var temp2 = temp_gene_array.filter(function(item){
+              return item !== gene_name && item !== '' && !item.includes(' ') && !item.includes('/') && item !== item.toLowerCase() && !item.includes('-') && item === item.toUpperCase()
+            })
+
+            // remove duplicates
+            this.IxnGA = temp2.filter(function(item, pos) {
+              return temp2.indexOf(item) == pos;
+            })
+
+            for(var j = 0; j < this.IxnGA.length; j++){
+              var api_string_ia = 'https://mygene.info/v3/query?q=' + this.IxnGA[j] + '&fields=symbol%2Cgenomic_pos%2Cname&species=human&size=1'
+
+              this.http.get(api_string_ia).toPromise().then(resp3 => {
+                this.IAgeneJson  = resp3;
+                if(this.IAgeneJson.hits[0]){
+                  if(this.IAgeneJson.hits[0].genomic_pos){
+                    var IAmyGeneA = {
+                      name: this.IAgeneJson.hits[0].symbol,
+                      chr: this.IAgeneJson.hits[0].genomic_pos.chr,
+                      start: this.IAgeneJson.hits[0].genomic_pos.start,
+                      stop: this.IAgeneJson.hits[0].genomic_pos.end,
+                      id: this.IAgeneJson.hits[0].genomic_pos.ensemblgene,
+                      color: '#ff7e05'
+                    }
+                    this.geneAA.push(IAmyGeneA)
+                    console.log(this.geneAA)
+                  }
+                  this.createGeneIdeogram(this.geneAA)
+                }
+              })
+            }
+          })
+
           this.createGeneIdeogram(this.geneAA)
         }
         else{
           this.geneJson = []
           this.NotMappable = gene_name
+          this.createGeneIdeogram([{}])
         }
-   
-        // var myGeneA = {
-        //     name: gene.symbol,
-        //     chr: geneJson.hits[0]
-        //     start: genomic_pos.start,
-        //     stop: genomic_pos.end,
-        //     id: genomic_pos.ensemblgene,
-        //     color: color
-        // }
-        // this.dbdata = resp;
-        // console.log(this.dbdata)
-        // this.get_result_names(this.dbdata)
-        // this.searchResults = true;
       });;
     }
 
@@ -419,13 +459,7 @@ NoGeneSelected = true;
 
 
   decorateGene(annot) {
-    // console.log(annot)
-    console.log("muah")
-    // console.log(Ideogram.taxid)
-    // const org = annot.id
-    // const term = "(" + annot.name + '}[gene])+AND+(${' + org + '}[orgn])`;
     const url = "https://ncbi.nlm.nih.gov/gene/?term=(" + annot.name + "[gene])+AND+(Homo%20sapiens[orgn])";
-    // const description = annot.description
     annot.displayName =
       `<a target="_blank" href="${url}">${annot.name}</a>
       <br/>`;

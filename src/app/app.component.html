@@ -47,7 +47,7 @@
             </div>
             <div id="gene_table_content">
               <ul class="list-group" >
-                <li (click)="geneSearch(gene.gene_name)" *ngFor="let gene of current_disease.disgenet.genes_related_to_disease;" class="list-group-item">{{gene.gene_name}}</li>
+                <li (click)="geneSearch(gene.gene_name)" *ngFor="let gene of current_disease.disgenet.genes_related_to_disease;" class="list-group-item">{{gene.gene_name}} <span class="right-caret">></span></li>
               </ul>
             </div>
           </div>
@@ -62,6 +62,11 @@
             </div>
             <div id="gene-ideo-div">
               <div id="gene-ideo-container"></div>
+            </div>
+            <div id="legend-div">
+              <span id="gene-legend-key" class="arrow-right">&#x25BA;</span> = Gene
+              <br>
+              <span id="ixn-legend-key" class="arrow-right">&#x25BA;</span> = Interacting Genes
             </div>
           </div>
 
@@ -95,7 +100,7 @@
               <li class="list-group-item" *ngFor="let variant of current_variant_array;">
                 <span class="list-spacing align-center">{{variant.chrom}}</span>
                 <span class="list-spacing align-center">{{variant.pos}}</span>
-                <span class="list-spacing align-center">{{variant.rsid}}</span>
+                <span class="list-spacing align-center"><a target="_blank" href="{{'https://www.ncbi.nlm.nih.gov/snp/' + variant.rsid}}">{{variant.rsid}}</a></span>
                 <span class="list-spacing align-center">{{variant.count}}</span>
               </li>
             </ul>

@@ -13,8 +13,8 @@ $main-theme-2:#4703c4;
 $main-theme-2-light: #8240fc;
 $main-background: #f9f5f6;
 
-$new-text-1: #dd1100;
-$new-text-2:#ff7d00;
+$new-text-1: #cc1100;
+$new-text-2:#ff7e05;
 
 body{
   background-color: red;
@@ -151,6 +151,17 @@ body{
   border-left: none;
 }
 
+.right-caret{
+  font-weight: bold;
+  margin-top: -2px;
+  float: right;
+  transform: scale(1, 1.5);
+  -webkit-transform: scale(1, 1.5);
+  -moz-transform: scale(1, 1.5);
+  -ms-transform: scale(1, 1.5);
+  -o-transform: scale(1, 1.5);
+}
+
 .gene-mapping-panel-heading{
   padding: 10px 0px 0px 0px;
 }
@@ -167,6 +178,19 @@ body{
 //   transform: translate(5%,-50%);
 // }
 
+
+#legend-div{
+  float: right;
+  padding-bottom: 15px;
+}
+
+#gene-legend-key{
+  color: $new-text-1;
+}
+
+#ixn-legend-key{
+  color: $new-text-2;
+}
 
 #variant_table_content{
   max-height: 350px;
@@ -400,6 +424,8 @@ body{
 .no-right-padding{
   padding-right: 0px;
 }
+
+
 
 // #_ideogramInnerWrap{
 //   overflow-y: hidden !important;
