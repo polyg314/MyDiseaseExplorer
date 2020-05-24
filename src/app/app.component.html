@@ -11,7 +11,9 @@
   </div>
   <div class="col-12 search-results-div no-padding padding-40" [ngClass]="{'show-results': searchResults}">
     <div class="panel">
-      <div class="panel-heading search-heading"><h5>Search Results for <b id="search-term">{{searchTerm}}</b>:</h5></div>
+      <div class="panel-heading search-heading"><h5>Search Results for <b id="search-term">{{searchTerm}}</b>:</h5>
+        <i *ngIf="!results_returned">No results, please check spelling or try alternative disease name</i>
+      </div>
       <div class="panel-body search-body">
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
           <label class="form-check-label btn btn-secondary search-buttons" for="exampleRadios1" *ngFor="let result_name of result_names; index as i" value={{i}} (click)="handleRadioChange($event)">

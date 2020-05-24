@@ -173,46 +173,49 @@ export class AppComponent implements AfterViewInit {
   searchTerm = '';
   searchResults = false;
   searchInputValue = '';
- 
+ results_returned = false;
   diseaseName:string;
   diseaseSearch($event: any){
   console.log("hellllooo")
   }
+
+
+
+
+  diseaseSearchMain(name){
+    this.searchTerm = name;
+    this.elementRef.nativeElement.ownerDocument.body.style.overflow = 'visible';
+    this.elementRef.nativeElement.ownerDocument.body.style.transition = 'all 2s ease 0s';
+    this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = '#fff';
+    var api_string = 'http://mydisease.info/v1/query?q=' + this.searchTerm
+    if(this.searchTerm.length > 0){
+      this.http.get(api_string).subscribe(resp => {
+        this.dbdata = resp;
+        console.log(this.dbdata)
+        this.get_result_names(this.dbdata)
+        this.searchResults = true;
+        this.results_returned = true;
+        if(this.dbdata.total === 0){
+          this.current_disease = '';
+          this.results_returned= false;
+          // console.log('nahhh')
+        }
+      });;
+    }else{
+      this.current_disease = '';
+      this.results_returned= false;
+      console.log('nahhh')
+    }
+  }
+
   searchForDisease($event){
-    this.elementRef.nativeElement.ownerDocument.body.style.overflow = 'visible';
-    this.elementRef.nativeElement.ownerDocument.body.style.transition = 'all 2s ease 0s';
-    this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = '#fff';
-    this.searchTerm = $event.target.value;
-    var api_string = 'http://mydisease.info/v1/query?q=' + this.searchTerm
-    if(this.searchTerm.length > 0){
-      this.http.get(api_string).subscribe(resp => {
-        this.dbdata = resp;
-        console.log(this.dbdata)
-        this.get_result_names(this.dbdata)
-        this.searchResults = true;
-      });;
-    }else{
-      this.current_disease = '';
-      // console.log("OKasdfasfadf")
-    }
+    this.diseaseSearchMain($event.target.value)
   }
+
   searchForDiseaseButton(){
-    this.elementRef.nativeElement.ownerDocument.body.style.overflow = 'visible';
-    this.elementRef.nativeElement.ownerDocument.body.style.transition = 'all 2s ease 0s';
-    this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = '#fff';
-    this.searchTerm = this.searchInputValue;
-    var api_string = 'http://mydisease.info/v1/query?q=' + this.searchTerm
-    if(this.searchTerm.length > 0){
-      this.http.get(api_string).subscribe(resp => {
-        this.dbdata = resp;
-        console.log(this.dbdata)
-        this.get_result_names(this.dbdata)
-        this.searchResults = true;
-      });;
-    }else{
-      this.current_disease = '';
-    }
+    this.diseaseSearchMain(this.searchInputValue)
   }
+
 
 
 
