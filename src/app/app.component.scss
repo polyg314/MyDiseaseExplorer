@@ -434,4 +434,9 @@ body{
     padding-left: 0px;
     padding-right: 0px;
   }
+  
+  #main-title, #main-jumbo-description, #main-title span, #main-jumbo-description span{
+    transform: none !important;
+  }
+  
 }
