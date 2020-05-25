@@ -19,25 +19,13 @@ import { IdeogramComponent} from './ideogram/ideogram.component'
 
 export class AppComponent implements AfterViewInit {
 
-
-  // @ViewChild(IdeogramComponent, {static: false}) child;
-  // ngAfterContentChecked() {
-  //   if(this.current_variant_array.length > 0){
-  //     this.createIdeogram(this.updatedAnnotations);
-  //   }
-  // }
-  // ngAfterViewInit() {
-  //   console.log('only after THIS EVENT "child" is usable!!');
-  //   console.log(this.child)
-  // }
-
   constructor(private http: HttpClient, private elementRef: ElementRef) {
     this.data = this.http.get<DataModel>('./assets/data.json');
     this.http.get('./assets/diabetes.json').subscribe(resp => {
       this.dbdata = resp;
-      console.log(this.dbdata)
       this.get_result_names(this.dbdata)
       this.searchTerm = 'diabetes';
+      // uncomment to reveal more without having to search
       // this.searchResults = true;
     });;
   }
@@ -46,7 +34,7 @@ export class AppComponent implements AfterViewInit {
     this.elementRef.nativeElement.ownerDocument.body.style.overflow = 'hidden';
  }
 
-
+ // create annotaiton array for variant array mapping on ideogram 
   newAnnotationArray(current_variants){
     var newAA = []
     for(var i = 0; i < current_variants.length; i++){
@@ -67,6 +55,7 @@ export class AppComponent implements AfterViewInit {
     return(newAA)
   }
 
+// create variant array ideogram (chromosome/variant mapping)
   createIdeogram(annotations_array) {
     const ideogram = new Ideogram({
       organism: 'human',  
@@ -78,11 +67,7 @@ export class AppComponent implements AfterViewInit {
       rotatable: false,
       annotations: annotations_array
     });
-    // console.log(ideogram)
   }
-
-
-
 
   title = 'MyDisease.info Explorer';
   data: Observable<DataModel>;
@@ -92,6 +77,8 @@ export class AppComponent implements AfterViewInit {
   result_defs = [];
   results_array = [];
   current_disease: any;
+
+  // oranize disease search results
   get_result_names(result_json){
     this.result_names = [];
     this.result_ids = [];
@@ -100,9 +87,6 @@ export class AppComponent implements AfterViewInit {
     for(var i = 0; i < result_json.hits.length; i++){
       if(result_json.hits[i].mondo && result_json.hits[i].disgenet){
         if(result_json.hits[i].disgenet.length > 0){
-          // console.log("SDIFHOSDIFJSOF")
-          // console.log(i)
-          // console.log(result_json.hits[i])
           var new_disgenet = result_json.hits[i].disgenet[0]
           if(result_json.hits[i].disgenet.length > 1){
             for(var j = 1; j < result_json.hits[i].disgenet.length; j++){
@@ -114,8 +98,11 @@ export class AppComponent implements AfterViewInit {
                     new_disgenet.genes_related_to_disease = result_json.hits[i].disgenet[j].genes_related_to_disease
                   }
                 }
-                else if(typeof(result_json.hits[i].disgenet[j].genes_related_to_disease) === "object"){
+                else{
                   if(new_disgenet.genes_related_to_disease){
+                    if(new_disgenet.genes_related_to_disease.constructor !== Array){
+                      new_disgenet.genes_related_to_disease = [new_disgenet.genes_related_to_disease]
+                    }
                     new_disgenet.genes_related_to_disease.push(result_json.hits[i].disgenet[j].genes_related_to_disease)
                   }
                   else{
@@ -151,26 +138,19 @@ export class AppComponent implements AfterViewInit {
             result_json.hits[i].disgenet.genes_related_to_disease = [result_json.hits[i].disgenet.genes_related_to_disease]
           }
         }            
-        // console.log(result_json.hits[i])
         this.result_names.push(result_json.hits[i].disgenet.xrefs.disease_name)
         this.result_ids.push(result_json.hits[i]._id)
         this.result_defs.push(result_json.hits[i].mondo.definition)
         this.results_array.push(result_json.hits[i])
       }
     }
-    // console.log(this.result_names)
-    // console.log(this.result_ids)
-    // console.log(this.result_defs)
   }
 
   searchTerm = '';
   searchResults = false;
   searchInputValue = '';
- results_returned = false;
+  results_returned = false;
   diseaseName:string;
-  diseaseSearch($event: any){
-  console.log("hellllooo")
-  }
 
 
 
@@ -184,20 +164,17 @@ export class AppComponent implements AfterViewInit {
     if(this.searchTerm.length > 0){
       this.http.get(api_string).subscribe(resp => {
         this.dbdata = resp;
-        console.log(this.dbdata)
         this.get_result_names(this.dbdata)
         this.searchResults = true;
         this.results_returned = true;
         if(this.dbdata.total === 0){
           this.current_disease = '';
           this.results_returned= false;
-          // console.log('nahhh')
         }
       });;
     }else{
       this.current_disease = '';
       this.results_returned= false;
-      console.log('nahhh')
     }
   }
 
@@ -209,12 +186,9 @@ export class AppComponent implements AfterViewInit {
     this.diseaseSearchMain(this.searchInputValue)
   }
 
-
-
-
-
+  // variants array
   current_variant_array = [];
-
+  // get hit counts (number of results) for each variant and sort by number of hits
   getCurrentVariantArray(id){
     var temp_var_array = this.current_disease.disgenet.variants_related_to_disease
     var new_var_array = []
@@ -238,7 +212,6 @@ export class AppComponent implements AfterViewInit {
     }
     return(new_var_array)
   }
-
   
   updatedAnnotations = []
   current_disease_name = '';
@@ -246,20 +219,10 @@ export class AppComponent implements AfterViewInit {
     this.NotMappable = '';
     this.currentSearchGene = {};
     this.createGeneIdeogram([{}])
-    // console.log($event.target.value)
-    // console.log(this.results_array)
     this.current_disease = this.results_array[parseInt($event.target.value)]
     this.current_disease_name = this.result_names[parseInt($event.target.value)]
-    // console.log("HIHIHIH")
-    // console.log(this.current_disease)
     this.current_variant_array = this.getCurrentVariantArray(parseInt($event.target.value))
     this.updatedAnnotations = this.newAnnotationArray(this.current_variant_array)
-    // console.log("NEW ANS")
-    // console.log(this.updatedAnnotations)
-    // ngAfterContentChecked() {
- 
-    // }
-    // this.createGeneIdeogram([])
     this.createIdeogram(this.updatedAnnotations);
   }
 
@@ -271,22 +234,18 @@ export class AppComponent implements AfterViewInit {
   wikiJson: any;
   IxnGA = [];
   IAgeneJson: any;
+
+  //Gene specific search through mygene and chromosome mapping of gene and its interacting genes
   geneSearch(gene_name){
-    // console.log("HISDFHSDOIF")
-    // console.log(gene_name)
-    // this.createGeneIdeogram([])
     this.geneAA = []
     this.NotMappable = '';
     this.IxnGA = [];
     this.NoGeneSelected = false;
- 
    
     var api_string = 'https://mygene.info/v3/query?q=' + gene_name + '&fields=symbol%2Cgenomic_pos%2Cname&species=human&size=1'
 
     this.http.get(api_string).subscribe(resp => {
-        // console.log(resp.hits[0])
         this.geneJson = resp
-        console.log(this.geneJson.hits[0])
         if(this.geneJson.hits[0].genomic_pos){
           var myGeneA = {
             name: this.geneJson.hits[0].symbol,
@@ -298,12 +257,10 @@ export class AppComponent implements AfterViewInit {
           }
           this.currentSearchGene = myGeneA
           this.currentSearchGene.description = this.geneJson.hits[0].name,
-          console.log(myGeneA)
           this.geneAA.push(myGeneA)
           var wiki_api = 'https://webservice.wikipathways.org/findInteractions?query='+gene_name+'&format=json'
           
           this.http.get(wiki_api).subscribe(resp2 => {
-            console.log(resp2)
             this.wikiJson = resp2
             var temp_gene_array = [];
             var results_array = this.wikiJson.result.filter(function(item){
@@ -345,7 +302,6 @@ export class AppComponent implements AfterViewInit {
                       color: '#ff7e05'
                     }
                     this.geneAA.push(IAmyGeneA)
-                    console.log(this.geneAA)
                   }
                   this.createGeneIdeogram(this.geneAA)
                 }
@@ -370,39 +326,12 @@ export class AppComponent implements AfterViewInit {
 
 
   ngOnInit() {
-    
-    // this.createIdeogram(this.example_ans);
-    // console.log("hiiasdfoasdjfoiasjfoiasjfosdjfio")
+
   }
-
-  // `https://webservice.wikipathways.org/findInteractions${queryString}`;
-  // const taxid = ideogram.config.taxid;
-  // const orgUnderscored = ideogram.config.organism.replace(/[ -]/g, '_');
-
-  // const params = `&format=condensed&type=paralogues&target_taxon=${taxid}`;
-  // let path = `/homology/id/${annot.id}?${params}`
-
-
-  // newGeneAnnotationArray(current_variants){
-  //   var newAA = []
-  //   for(var i = 0; i < current_variants.length; i++){
-  //     if(parseInt(current_variants[i].chrom) > 0){
-  //       var newA = {
-  //         name: current_variants[i].rsid,
-  //         chr: current_variants[i].chrom,
-  //         start:parseInt(current_variants[i].pos),
-  //         stop:parseInt(current_variants[i].pos)
-  //       };
-  //       newAA.push(newA)
-  //     }
-  //   }
-  //   return(newAA)
-  // }
 
 NoGeneSelected = true;
   createGeneIdeogram(annotations_array) {
     if(!(annotations_array[0].name)){
-      console.log("ooooo")
       this.NoGeneSelected = true;
     }else{
       this.NoGeneSelected = false;
@@ -419,44 +348,7 @@ NoGeneSelected = true;
       annotations: annotations_array,
       onWillShowAnnotTooltip: this.decorateGene
     });
-    // console.log(ideogram)
   }
-
-
-  // const annot = {
-  //   name: gene.symbol,
-  //   chr: genomic_pos.chr,
-  //   start: genomic_pos.start,
-  //   stop: genomic_pos.end,
-  //   id: genomic_pos.ensemblgene,
-  //   color: color
-  // };
-
-
-  // config = {
-  //   organism: organism,
-  //   container: '#ideogram-container',
-  //   chrWidth: 8,
-  //   chrHeight: 90,
-  //   chrLabelSize: 10,
-  //   annotationHeight: 5,
-  //   showFullyBanded: false,
-  //   rotatable: false,
-  //   legend: legend,
-  //   onWillShowAnnotTooltip: decorateGene
-  // }
-
-  // shape = 'triangle'; 
-
-  // legend = [{
-  //   name: '<b>Click gene to search</b>',
-  //   rows: [
-  //     {name: 'Interacting gene', color: 'purple', shape: this.shape},
-  //     {name: 'Paralogous gene', color: 'pink', shape: this.shape},
-  //     {name: 'Searched gene', color: 'red', shape: this.shape}
-  //   ]
-  // }];
-
 
   decorateGene(annot) {
     const url = "https://ncbi.nlm.nih.gov/gene/?term=(" + annot.name + "[gene])+AND+(Homo%20sapiens[orgn])";
