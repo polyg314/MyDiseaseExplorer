@@ -15,7 +15,7 @@
         <i *ngIf="!results_returned">No results, please check spelling or try alternative disease name</i>
       </div>
       <div class="panel-body search-body">
-        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons" *ngIf="results_returned">
           <label class="form-check-label btn btn-secondary search-buttons" for="exampleRadios1" *ngFor="let result_name of result_names; index as i" value={{i}} (click)="handleRadioChange($event)">
             <input class="form-check-input" type="radio" name="nameRadios" value={{i}} (click)="handleRadioChange($event)">
             {{result_names[i]}}
